@@ -125,7 +125,7 @@
 
 // export default Login;
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Dimensions, Alert } from 'react-native';
 import axios from 'axios';
 
@@ -133,7 +133,6 @@ import GoogleSignInButton from '../components/GoogleSignInButton';
 import AppleSignInButton from '../components/AppleSignInButton';
 
 const { width, height } = Dimensions.get('window');
-const ngrokUrl = 'https://8823-2603-9009-705-d5cd-b53d-34d5-88ea-1252.ngrok-free.app';
 
 const OrSeparator = () => (
   <View style={styles.orSeparatorContainer}>
@@ -146,6 +145,26 @@ const OrSeparator = () => (
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [ngrokUrl, setNgrokUrl] = useState('');
+
+  useEffect(() => {
+    fetchNgrokUrl();
+  }, []);
+
+  const fetchNgrokUrl = async () => {
+    try {
+      // Fetch the ngrok URL dynamically here
+      const response = await axios.get('http://localhost:4040/api/tunnels');
+      const tunnels = response.data.tunnels;
+      const httpTunnel = tunnels.find(tunnel => tunnel.proto === 'https');
+      if (httpTunnel) {
+        setNgrokUrl(tunnels.public_url);
+      }
+    } catch (error) {
+      console.error('Error fetching ngrok URL:', error);
+      // Handle error fetching ngrok URL
+    }
+  };
 
   const handleLogin = async () => {
     try {
@@ -154,7 +173,7 @@ const Login = ({ navigation }) => {
       console.log('Login successful, token:', token);
       // Save the token in your app's state or storage for later use
       // Alert.alert('Logged In');
-      navigation.navigate('Home')
+      navigation.navigate('Home');
     } catch (error) {
       if (error.response) {
         Alert.alert('Login Error', error.response.data.message);

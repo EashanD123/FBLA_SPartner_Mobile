@@ -85,6 +85,23 @@ db.on('error', (err) => {
   console.error(err);
 });
 
+// Ngrok API endpoint
+app.get('/ngrok-url', async (req, res) => {
+  try {
+    const response = await axios.get('http://localhost:4040/api/tunnels');
+    const tunnels = response.data.tunnels;
+    const httpTunnel = tunnels.find(tunnel => tunnel.proto === 'https'); // Look for HTTPS tunnel
+    if (httpTunnel) {
+      res.json({ url: httpTunnel.public_url });
+    } else {
+      res.status(404).json({ message: 'Ngrok HTTPS tunnel not found' });
+    }
+  } catch (error) {
+    console.error('Error fetching ngrok URL:', error.message);
+    res.status(500).json({ message: 'Error fetching ngrok URL' });
+  }
+});
+
 // Define a user schema and model
 const UserSchema = new mongoose.Schema({
   email: String,
