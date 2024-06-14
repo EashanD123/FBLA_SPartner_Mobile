@@ -88,7 +88,7 @@ db.on('error', (err) => {
 // Ngrok API endpoint
 app.get('/ngrok-url', async (req, res) => {
   try {
-    const response = await axios.get('http://localhost:4040/api/tunnels');
+    const response = await axios.get('192.168.1.148/api/tunnels');
     const tunnels = response.data.tunnels;
     const httpTunnel = tunnels.find(tunnel => tunnel.proto === 'https'); // Look for HTTPS tunnel
     if (httpTunnel) {

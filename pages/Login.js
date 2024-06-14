@@ -1,134 +1,6 @@
-// import React, { useState } from 'react';
-// import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';
-
-// import GoogleSignInButton from '../components/GoogleSignInButton';
-// import AppleSignInButton from '../components/AppleSignInButton';
-
-// const { width, height } = Dimensions.get('window');
-
-// const OrSeparator = () => (
-//   <View style={styles.orSeparatorContainer}>
-//     <View style={styles.line} />
-//     <Text style={styles.orText}>or</Text>
-//     <View style={styles.line} />
-//   </View>
-// );
-
-// const Login = ({ navigation }) => {
-//   const [email, setEmail] = useState('');
-//   const [password, setPassword] = useState('');
-
-//   const handleLogin = () => {
-//     // Handle login logic here
-//     console.log('Email:', email);
-//     console.log('Password:', password);
-//     // For demonstration, just navigate to a dummy Home screen
-//     navigation.navigate('Home');
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <Image source={require('../assets/spartner_logo.png')} style={styles.logo} />
-//       <Text style={styles.title}>Welcome to SPartner</Text>
-//       <TextInput
-//         style={styles.input}
-//         placeholder="Email"
-//         value={email}
-//         onChangeText={setEmail}
-//         keyboardType="email-address"
-//         autoCapitalize="none"
-//       />
-//       <TextInput
-//         style={styles.input}
-//         placeholder="Password"
-//         value={password}
-//         onChangeText={setPassword}
-//         secureTextEntry
-//       />
-//       <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-//         <Text style={styles.buttonText}>Login</Text>
-//       </TouchableOpacity>
-//       <OrSeparator />
-//       <View style={styles.authenticationCont}>
-//         <GoogleSignInButton/>
-//         <AppleSignInButton/>
-//       </View>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     alignItems: 'center',
-//     backgroundColor: '#2c3e50',
-//     paddingHorizontal: '5%',
-//   },
-//   logo: {
-//     width: width * 0.6, // 55% of screen width
-//     height: width * 0.6, // 55% of screen width
-//     borderRadius: (width * 0.6) / 2, // Half of the width and height to make it circular
-//     borderWidth: 3,
-//     borderColor: '#fff',
-//     marginTop: height * 0.11, // 10% of screen height
-//     marginBottom: height * 0.06, // 2% of screen height
-//   },
-//   title: {
-//     fontSize: width * 0.075, // 6% of screen width
-//     fontWeight: 'bold',
-//     marginBottom: height * 0.015, // 5% of screen height
-//     textAlign: 'center',
-//     color: '#fff',
-//   },
-//   input: {
-//     height: 40,
-//     width: '100%',
-//     borderRadius: 5,
-//     marginBottom: 12,
-//     paddingHorizontal: 10,
-//     backgroundColor: '#fff',
-//   },
-//   loginButton: {
-//     width: '100%',
-//     height: 40,
-//     backgroundColor: '#3498db',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     borderRadius: 5,
-//   },
-//   buttonText: {
-//     color: '#fff',
-//     fontSize: 16,
-//     fontWeight: 'bold',
-//   },
-//   orSeparatorContainer: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     marginVertical: 20,
-//   },
-//   line: {
-//     flex: 1,
-//     height: 1,
-//     backgroundColor: '#ccc',
-//   },
-//   orText: {
-//     marginHorizontal: 10,
-//     fontSize: 16,
-//     color: '#ccc',
-//   },
-//   authenticationCont: {
-//     width: '100%',
-//     alignItems: 'center',
-//     marginTop: -10
-//   },
-// });
-
-// export default Login;
-
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Dimensions, Alert } from 'react-native';
 import axios from 'axios';
-
 import GoogleSignInButton from '../components/GoogleSignInButton';
 import AppleSignInButton from '../components/AppleSignInButton';
 
@@ -145,34 +17,45 @@ const OrSeparator = () => (
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [ngrokUrl, setNgrokUrl] = useState('');
+  const [ngrokUrl, setNgrokUrl] = useState(null);
 
   useEffect(() => {
+    const config = {
+      headers: { 'Authorization': "Bearer 2hsoEyQpmPX4VkdVTitaAGgnJE7_6dFvuuendEo5DM1ry44rX", 'Ngrok-Version': '2' }
+    };
+
+    const bodyParameters = {
+      'Ngrok-Version': '2'
+    };
+
+    const fetchNgrokUrl = async () => {
+      try {
+        console.log('here')
+        const response = await axios.get(
+          'https://api.ngrok.com/endpoints',
+          config
+        );
+        const url = response.data.endpoints[0].public_url
+        setNgrokUrl(url);
+      } catch (error) {
+        console.error('Failed to fetch ngrok URL:', error);
+        Alert.alert('Error', 'Failed to fetch server configuration.');
+      }
+    };
+
     fetchNgrokUrl();
   }, []);
 
-  const fetchNgrokUrl = async () => {
-    try {
-      // Fetch the ngrok URL dynamically here
-      const response = await axios.get('http://localhost:4040/api/tunnels');
-      const tunnels = response.data.tunnels;
-      const httpTunnel = tunnels.find(tunnel => tunnel.proto === 'https');
-      if (httpTunnel) {
-        setNgrokUrl(tunnels.public_url);
-      }
-    } catch (error) {
-      console.error('Error fetching ngrok URL:', error);
-      // Handle error fetching ngrok URL
-    }
-  };
-
   const handleLogin = async () => {
+    if (!ngrokUrl) {
+      Alert.alert('Error', 'Server configuration not loaded.');
+      return;
+    }
+
     try {
       const response = await axios.post(`${ngrokUrl}/login`, { email, password });
       const { token } = response.data;
       console.log('Login successful, token:', token);
-      // Save the token in your app's state or storage for later use
-      // Alert.alert('Logged In');
       navigation.navigate('Home');
     } catch (error) {
       if (error.response) {
@@ -290,7 +173,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: width * 0.9,
     justifyContent: 'space-between'
-  }, 
+  },
   registerButton: {
     marginTop: 10,
   },

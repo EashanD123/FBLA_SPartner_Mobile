@@ -1,23 +1,52 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Dimensions, Alert } from 'react-native';
-import axios from 'axios';
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
-const Home = () => {
+const BottomNavBar = ({ navigation }) => (
+  <View style={styles.bottomNavBar}>
+    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Account')}>
+      <Image source={require('../assets/exit.png')} style={styles.navIcon} />
+      <Text style={styles.navButtonText}>Sign Out</Text>
+    </TouchableOpacity>
+    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Help')}>
+      <Image source={require('../assets/user.png')} style={styles.navIcon} />
+      <Text style={styles.navButtonText}>Account</Text>
+    </TouchableOpacity>
+    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('SignOut')}>
+      <Image source={require('../assets/info.png')} style={styles.navIcon} />
+      <Text style={styles.navButtonText}>Help</Text>
+    </TouchableOpacity>
+  </View>
+);
 
+export default function Home({ navigation }) {
   return (
     <View style={styles.container}>
-      <Text> Home </Text>
+      <Image source={require('../assets/spartner_logo.png')} style={styles.logo} />
+      <Text style={styles.title}>Welcome to the Career and Technical Education Department</Text>
+      <TouchableOpacity 
+        style={styles.button} 
+        onPress={() => navigation.navigate('Partners')}
+      >
+        <Text style={styles.buttonText}>View Partners</Text>
+      </TouchableOpacity>
+      <TouchableOpacity 
+        style={styles.button} 
+        onPress={() => navigation.navigate('Search Partners')}
+      >
+        <Text style={styles.buttonText}>Download Report</Text>
+      </TouchableOpacity>
+      <BottomNavBar navigation={navigation} />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#2c3e50',
+    backgroundColor: '#2c3e50', // Match background color with Login screen
     paddingHorizontal: '5%',
   },
   logo: {
@@ -30,67 +59,48 @@ const styles = StyleSheet.create({
     marginBottom: height * 0.06,
   },
   title: {
-    fontSize: width * 0.075,
-    fontWeight: 'bold',
-    marginBottom: height * 0.015,
-    textAlign: 'center',
+    fontSize: width * 0.06,
     color: '#fff',
+    textAlign: 'center',
+    marginBottom: height * 0.05,
   },
-  input: {
-    height: 40,
+  button: {
     width: '100%',
-    borderRadius: 5,
-    marginBottom: 12,
-    paddingHorizontal: 10,
-    backgroundColor: '#fff',
-  },
-  loginButton: {
-    width: '100%',
-    height: 40,
-    backgroundColor: '#3498db',
+    height: 50,
+    backgroundColor: '#3498db', // Match button color with Login screen
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
+    marginBottom: 15,
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
-  orSeparatorContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  line: {
-    flex: 1,
-    height: 1,
-    backgroundColor: '#ccc',
-  },
-  orText: {
-    marginHorizontal: 10,
-    fontSize: 16,
-    color: '#ccc',
-  },
-  authenticationCont: {
+  bottomNavBar: {
     width: '100%',
-    alignItems: 'center',
-    marginTop: -10,
-  },
-  linkView: {
+    height: 65, // Increased height to accommodate icons
+    position: 'absolute',
+    bottom: 0,
     flexDirection: 'row',
-    width: width * 0.9,
-    justifyContent: 'space-between'
-  }, 
-  registerButton: {
-    marginTop: 10,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#34495e',
   },
-  registerButtonText: {
+  navButton: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 2
+  },
+  navIcon: {
+    width: 22,
+    height: 22,
+    marginBottom: 4,
+  },
+  navButtonText: {
     color: '#fff',
     fontSize: 16,
-    textDecorationLine: 'underline',
-    textAlign: 'center',
   },
 });
-
-export default Home;
