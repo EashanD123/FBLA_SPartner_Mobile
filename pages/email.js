@@ -17,7 +17,7 @@ export const ContactUs = () => {
           message: 'This is a static message',
         },
         {
-          publicKey: 'YOUR_PUBLIC_KEY',
+          publicKey: 'service_ybwp7qs',
         },
       );
 
