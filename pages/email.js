@@ -1,94 +1,53 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, Button, Alert } from 'react-native';
-import emailjs from 'emailjs-com';
+import { useState } from 'react';
+import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { send, EmailJSResponseStatus } from '@emailjs/react-native';
 
-export default function App() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [subject, setSubject] = useState('');
-  const [message, setMessage] = useState('');
+export const ContactUs = () => {
+  const [email, setEmail] = useState < string > ();
+  const [name, setName] = useState < string > ();
 
-  const sendEmail = () => {
-    const templateParams = {
-      user_name: name,
-      user_email: email,
-      subject: subject,
-      message: message,
-    };
+  const onSubmit = async () => {
+    try {
+      await send(
+        'YOUR_SERVICE_ID',
+        'YOUR_TEMPLATE_ID',
+        {
+          name,
+          email,
+          message: 'This is a static message',
+        },
+        {
+          publicKey: 'YOUR_PUBLIC_KEY',
+        },
+      );
 
-    emailjs.send('contact_service', 'contact_form', templateParams, 'service_ybwp7qs')
-      .then(response => {
-        Alert.alert('SUCCESS!', 'Your email has been sent.');
-      })
-      .catch(error => {
-        Alert.alert('FAILED...', 'There was an error sending your email.');
-      });
+      console.log('SUCCESS!');
+    } catch (err) {
+      if (err instanceof EmailJSResponseStatus) {
+        console.log('EmailJS Request Failed...', err);
+      }
+
+      console.log('ERROR', err);
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Send Email</Text>
+    <View>
       <TextInput
-        style={styles.input}
-        placeholder="Name"
-        value={name}
-        onChangeText={setName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
+        inputMode="email"
         keyboardType="email-address"
+        textContentType="emailAddress"
+        placeholder="Email"
         value={email}
         onChangeText={setEmail}
       />
       <TextInput
-        style={styles.input}
-        placeholder="Subject"
-        value={subject}
-        onChangeText={setSubject}
+        inputMode="text"
+        placeholder="Name"
+        value={name}
+        onChangeText={setName}
       />
-      <TextInput
-        style={styles.textarea}
-        placeholder="Message"
-        value={message}
-        onChangeText={setMessage}
-        multiline
-      />
-      <Button title="Send" onPress={sendEmail} color="#4A90E2" />
+      <Button title="Submit" onPress={onSubmit} />
     </View>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-    backgroundColor: '#f4f4f9',
-  },
-  title: {
-    textAlign: 'center',
-    fontSize: 24,
-    marginBottom: 20,
-    color: '#4A90E2',
-  },
-  input: {
-    height: 40,
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 4,
-    marginBottom: 15,
-    padding: 10,
-    backgroundColor: '#fff',
-  },
-  textarea: {
-    height: 100,
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 4,
-    marginBottom: 15,
-    padding: 10,
-    backgroundColor: '#fff',
-    textAlignVertical: 'top',
-  },
-});
+};

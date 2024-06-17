@@ -9,7 +9,7 @@ const BottomNavBar = ({ navigation }) => (
       <Image source={require('../assets/exit.png')} style={styles.navIcon} />
       <Text style={styles.navButtonText}>Sign Out</Text>
     </TouchableOpacity>
-    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Help')}>
+    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Email')}>
       <Image source={require('../assets/user.png')} style={styles.navIcon} />
       <Text style={styles.navButtonText}>Account</Text>
     </TouchableOpacity>
