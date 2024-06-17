@@ -20,14 +20,14 @@ const BottomNavBar = ({ navigation }) => (
   </View>
 );
 
-export default function Home({ navigation }) {
+const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image source={require('../assets/spartner_logo.png')} style={styles.logo} />
       <Text style={styles.title}>Welcome to the Career and Technical Education Department</Text>
       <TouchableOpacity 
         style={styles.button} 
-        onPress={() => navigation.navigate('Partners')}
+        onPress={() => navigation.navigate('ViewPartners')}
       >
         <Text style={styles.buttonText}>View Partners</Text>
       </TouchableOpacity>
@@ -79,10 +79,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   bottomNavBar: {
-    width: '100%',
-    height: 65, // Increased height to accommodate icons
+    width: width *0.9,
+    height: 75, // Increased height to accommodate icons
+    bottom: height * 0.04,
+    borderRadius: 10,
+    borderColor: 'white', 
+    borderWidth: 0.5
+    , 
     position: 'absolute',
-    bottom: 0,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -104,3 +108,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+export default Home;
