@@ -9,15 +9,15 @@ export const ContactUs = () => {
   const onSubmit = async () => {
     try {
       await send(
-        'YOUR_SERVICE_ID',
-        'YOUR_TEMPLATE_ID',
+        'service_ybwp7qs',
+        'template_x6t2sar',
         {
           name,
           email,
           message: 'This is a static message',
         },
         {
-          publicKey: 'service_ybwp7qs',
+          publicKey: 'bCkx89bOJ1T_8ZuOI',
         },
       );
 
