@@ -1,6 +1,6 @@
-// pages/ViewPartners.js
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, TextInput, FlatList } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, TextInput, FlatList, Alert } from 'react-native';
+import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
 
@@ -23,34 +23,44 @@ const BottomNavBar = ({ navigation }) => (
 
 const ViewPartners = ({ navigation }) => {
     const [searchText, setSearchText] = useState('');
-    const [partners, setPartners] = useState([
-        { id: '1', name: 'Unisol', info: 'Info about Partner 1' },
-        { id: '2', name: 'Busches', info: 'Info about Partner 2' },
-        { id: '3', name: 'Stewarts', info: 'Info about Partner 3' },
-        { id: '4', name: 'Novi Sports Club', info: 'Info about Partner 1' },
-        { id: '5', name: 'Novi Community School District', info: 'Info about Partner 2' },
-        { id: '6', name: 'Official Driving School of Novi', info: 'Info about Partner 3' },
-        { id: '7', name: 'Splaine and Reynolds', info: 'Info about Partner 1' },
-        { id: '9', name: 'Vision Works', info: 'Info about Partner 2' },
-        { id: '10', name: 'Chipotle', info: 'Info about Partner 3' },
-        { id: '11', name: 'Great Clips', info: 'Info about Partner 1' },
-        { id: '12', name: 'Kohls', info: 'Info about Partner 2' },
-        { id: '13', name: 'Burlington 3', info: 'Info about Partner 3' },
-        { id: '14', name: 'Party City', info: 'Info about Partner 1' },
-        { id: '15', name: 'Hungry Howies', info: 'Info about Partner 2' },
-        { id: '16', name: 'Suburban Car Dealership', info: 'Info about Partner 3' },
-        { id: '17', name: 'Coney Island', info: 'Info about Partner 2' },
-        { id: '18', name: 'Paradise Park', info: 'Info about Partner 3' },
-        { id: '19', name: 'Bonn Adventure', info: 'Info about Partner 1' },
-        { id: '20', name: 'Dairy Queen', info: 'Info about Partner 2' },
-        { id: '21', name: 'Ping Identity', info: 'Info about Partner 3' },
-        { id: '22', name: 'Quartz Properties', info: 'Info about Partner 2' },
-        { id: '23', name: 'Nespon', info: 'Info about Partner 3' },
-        { id: '24', name: 'Pandev Grocers', info: 'Info about Partner 1' },
-        { id: '25', name: 'Home Depot', info: 'Info about Partner 2' },
-        { id: '26', name: 'Panera Bread', info: 'Info about Partner 3' },
-        // Add more partners here
-    ]);
+    const [partners, setPartners] = useState([]);
+    const [ngrokUrl, setNgrokUrl] = useState(null);
+
+    useEffect(() => {
+        const config = {
+            headers: { 'Authorization': "Bearer 2hsoEyQpmPX4VkdVTitaAGgnJE7_6dFvuuendEo5DM1ry44rX", 'Ngrok-Version': '2' }
+        };
+
+        const fetchNgrokUrl = async () => {
+            try {
+                const response = await axios.get(
+                    'https://api.ngrok.com/endpoints',
+                    config
+                );
+                const url = response.data.endpoints[0].public_url;
+                setNgrokUrl(url);
+            } catch (error) {
+                console.error('Failed to fetch ngrok URL:', error);
+                Alert.alert('Error', 'Failed to fetch server configuration.');
+            }
+        };
+        fetchNgrokUrl();
+    }, []);
+
+    useEffect(() => {
+        const fetchPartners = async () => {
+            try {
+                if (ngrokUrl) {
+                    const response = await axios.get(`${ngrokUrl}/partners`);
+                    setPartners(response.data);
+                }
+            } catch (error) {
+                console.error('Error fetching partners:', error);
+            }
+        };
+
+        fetchPartners();
+    }, [ngrokUrl]);
 
     const filteredPartners = partners.filter(partner =>
         partner.name.toLowerCase().includes(searchText.toLowerCase())
@@ -72,11 +82,12 @@ const ViewPartners = ({ navigation }) => {
             <View style={styles.listView}>
                 <FlatList
                     data={filteredPartners}
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => item._id}
+                    showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => (
-                        <TouchableOpacity style={[styles.partnerItem, index === 0 && { marginTop: 0 }]}>
+                        <TouchableOpacity onPress={() => navigation.navigate('PartnerDetails', { partnerName: item.name })} style={[styles.partnerItem, index === 0 && { marginTop: 0 }]}>
                             <Text style={styles.partnerName}>{item.name}</Text>
-                            <Text style={styles.partnerInfo}>{item.info}</Text>
+                            <Text style={styles.partnerInfo}>{item.description}</Text>
                         </TouchableOpacity>
                     )}
                 />
@@ -128,11 +139,13 @@ const styles = StyleSheet.create({
     },
     partnerItem: {
         width: width * 0.9,
-        height: height * 0.11, 
-        justifyContent: 'center', 
+        height: height * 0.11,
+        justifyContent: 'center',
         backgroundColor: '#34495e',
         padding: 15,
         borderRadius: 5,
+        borderWidth: 0.5,
+        borderColor: 'white',
         marginTop: 10,
     },
     partnerName: {
@@ -153,7 +166,7 @@ const styles = StyleSheet.create({
     },
     bottomNavBar: {
         width: width * 0.9,
-        height: 75, // Increased height to accommodate icons
+        height: 75,
         bottom: height * 0.04,
         borderRadius: 10,
         borderColor: 'white',

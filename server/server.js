@@ -1,67 +1,10 @@
-// const express = require('express');
-// const mongoose = require('mongoose');
-// const bodyParser = require('body-parser');
-// const cors = require('cors');
-
-// const app = express();
-// const port = 5000;
-
-// // Middleware
-// app.use(bodyParser.json());
-// app.use(cors());
-
-// // MongoDB connection
-// mongoose.connect('mongodb://localhost:27017/mydatabase', {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// });
-
-// const db = mongoose.connection;
-// db.once('open', () => {
-//   console.log('Connected to MongoDB');
-// });
-
-// db.on('error', (err) => {
-//   console.error(err);
-// });
-
-// // Define a schema and model
-// const ItemSchema = new mongoose.Schema({
-//   name: String,
-// });
-
-// const Item = mongoose.model('Item', ItemSchema);
-
-// // Routes
-// app.get('/items', async (req, res) => {
-//   try {
-//     const items = await Item.find();
-//     res.json(items);
-//   } catch (err) {
-//     res.status(500).send(err);
-//   }
-// });
-
-// app.post('/items', async (req, res) => {
-//   try {
-//     const newItem = new Item(req.body);
-//     const savedItem = await newItem.save();
-//     res.json(savedItem);
-//   } catch (err) {
-//     res.status(500).send(err);
-//   }
-// });
-
-// app.listen(port, () => {
-//   console.log(`Server running on http://172.20.10.1:${port}`);
-// });
-
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcrypt'); // Import bcrypt for password hashing
 const jwt = require('jsonwebtoken');
+const axios = require('axios'); // Import axios for ngrok API call
 
 const app = express();
 const port = 5000;
@@ -110,7 +53,15 @@ const UserSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', UserSchema);
 
-// Routes
+// Define a partner schema and model
+const PartnerSchema = new mongoose.Schema({
+  name: String,
+  description: String,
+});
+
+const Partner = mongoose.model('Partner', PartnerSchema);
+
+// Routes for authentication
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -137,6 +88,16 @@ app.post('/register', async (req, res) => {
     const newUser = new User({ email, password: hashedPassword }); // Save the hashed password
     await newUser.save();
     res.json({ message: 'User registered successfully' });
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+// Route to get partner data
+app.get('/partners', async (req, res) => {
+  try {
+    const partners = await Partner.find();
+    res.json(partners);
   } catch (err) {
     res.status(500).send(err);
   }
