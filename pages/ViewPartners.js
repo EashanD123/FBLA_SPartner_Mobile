@@ -1,25 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import NavigationMenu2 from '../components/NavigationMenu2';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, TextInput, FlatList, Alert } from 'react-native';
 import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
-
-const BottomNavBar = ({ navigation }) => (
-    <View style={styles.bottomNavBar}>
-        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Account')}>
-            <Image source={require('../assets/exit.png')} style={styles.navIcon} />
-            <Text style={styles.navButtonText}>Sign Out</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Help')}>
-            <Image source={require('../assets/user.png')} style={styles.navIcon} />
-            <Text style={styles.navButtonText}>Account</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('SignOut')}>
-            <Image source={require('../assets/info.png')} style={styles.navIcon} />
-            <Text style={styles.navButtonText}>Help</Text>
-        </TouchableOpacity>
-    </View>
-);
 
 const ViewPartners = ({ navigation }) => {
     const [searchText, setSearchText] = useState('');
@@ -92,7 +76,7 @@ const ViewPartners = ({ navigation }) => {
                     )}
                 />
             </View>
-            <BottomNavBar navigation={navigation} />
+            <NavigationMenu2 navigation={navigation}/>
         </View>
     );
 };

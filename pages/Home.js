@@ -1,24 +1,8 @@
 import React from 'react';
+import NavigationMenu1 from '../components/NavigationMenu1'
 import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
-
-const BottomNavBar = ({ navigation }) => (
-  <View style={styles.bottomNavBar}>
-    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Account')}>
-      <Image source={require('../assets/exit.png')} style={styles.navIcon} />
-      <Text style={styles.navButtonText}>Sign Out</Text>
-    </TouchableOpacity>
-    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Email')}>
-      <Image source={require('../assets/user.png')} style={styles.navIcon} />
-      <Text style={styles.navButtonText}>Account</Text>
-    </TouchableOpacity>
-    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('SignOut')}>
-      <Image source={require('../assets/info.png')} style={styles.navIcon} />
-      <Text style={styles.navButtonText}>Help</Text>
-    </TouchableOpacity>
-  </View>
-);
 
 const Home = ({ navigation }) => {
   return (
@@ -37,7 +21,7 @@ const Home = ({ navigation }) => {
       >
         <Text style={styles.buttonText}>Download Report</Text>
       </TouchableOpacity>
-      <BottomNavBar navigation={navigation} />
+      <NavigationMenu1 navigation={navigation} />
     </View>
   );
 }

@@ -1,25 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import NavigationMenu2 from '../components/NavigationMenu2';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, Alert } from 'react-native';
 import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
-
-const BottomNavBar = ({ navigation }) => (
-    <View style={styles.bottomNavBar}>
-        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Account')}>
-            <Image source={require('../assets/exit.png')} style={styles.navIcon} />
-            <Text style={styles.navButtonText}>Sign Out</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Help')}>
-            <Image source={require('../assets/user.png')} style={styles.navIcon} />
-            <Text style={styles.navButtonText}>Account</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('SignOut')}>
-            <Image source={require('../assets/info.png')} style={styles.navIcon} />
-            <Text style={styles.navButtonText}>Help</Text>
-        </TouchableOpacity>
-    </View>
-);
 
 const PartnerDetails = ({ route, navigation }) => {
     const { partnerName } = route.params;
@@ -65,9 +49,9 @@ const PartnerDetails = ({ route, navigation }) => {
 
     if (!partner) {
         return (
-            <View style={styles.container}>
+            <View style={styles.container2}>
                 <Text style={styles.loadingText}>Loading...</Text>
-                <BottomNavBar navigation={navigation} />
+                <NavigationMenu2/>
             </View>
         );
     }
@@ -96,7 +80,7 @@ const PartnerDetails = ({ route, navigation }) => {
             <View style={styles.mapBox}>
 
             </View>
-            <BottomNavBar navigation={navigation} />
+            <NavigationMenu2 navigation={navigation}/>
         </View>
     );
 };
@@ -108,10 +92,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#2c3e50',
         paddingHorizontal: '5%',
     },
+    container2: {
+        width: width, 
+        height: height, 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        backgroundColor: '#2c3e50',
+    },
     loadingText: {
         color: '#ecf0f1',
         fontSize: 20,
-        marginTop: 20,
     },
     infoBox: {
         backgroundColor: '#34495e',

@@ -7,7 +7,7 @@ import Home from './pages/Home';
 import Sample from './pages/Sample';
 import ViewPartners from './pages/ViewPartners';
 import PartnerDetails from './pages/PartnerDetails';
-import email from './pages/email'
+// import email from './pages/email'
 import Register from './pages/Register';
 
 
@@ -23,7 +23,7 @@ function App() {
       <Stack.Screen name="PartnerDetails" component={PartnerDetails}/>
       <Stack.Screen name="Sample" component={Sample}/>
       <Stack.Screen name="Register" component={Register}/>
-      <Stack.Screen name="Email" component={email}/>
+      {/* <Stack.Screen name="Email" component={email}/> */}
     </Stack.Navigator>
   );
 }

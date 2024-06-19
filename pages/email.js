@@ -1,35 +1,35 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
-import { send, EmailJSResponseStatus } from '@emailjs/react-native';
+//import { send, EmailJSResponseStatus } from '@emailjs/react-native';
 
 export const ContactUs = () => {
-  const [email, setEmail] = useState < string > ();
-  const [name, setName] = useState < string > ();
+  const [email, setEmail] = useState();
+  const [name, setName] = useState();
 
-  const onSubmit = async () => {
-    try {
-      await send(
-        'service_ybwp7qs',
-        'template_x6t2sar',
-        {
-          name,
-          email,
-          message: 'This is a static message',
-        },
-        {
-          publicKey: 'bCkx89bOJ1T_8ZuOI',
-        },
-      );
+  // const onSubmit = async () => {
+  //   try {
+  //     await send(
+  //       'service_ybwp7qs',
+  //       'template_x6t2sar',
+  //       {
+  //         name,
+  //         email,
+  //         message: 'This is a static message',
+  //       },
+  //       {
+  //         publicKey: 'bCkx89bOJ1T_8ZuOI',
+  //       },
+  //     );
 
-      console.log('SUCCESS!');
-    } catch (err) {
-      if (err instanceof EmailJSResponseStatus) {
-        console.log('EmailJS Request Failed...', err);
-      }
+  //     console.log('SUCCESS!');
+  //   } catch (err) {
+  //     if (err instanceof EmailJSResponseStatus) {
+  //       console.log('EmailJS Request Failed...', err);
+  //     }
 
-      console.log('ERROR', err);
-    }
-  };
+  //     console.log('ERROR', err);
+  //   }
+  // };
 
   return (
     <View>
