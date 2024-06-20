@@ -59,10 +59,6 @@ const PartnerDetails = ({ route, navigation }) => {
         }
     };
 
-    const handleEditPartner = () => {
-        navigation.navigate('EditPartner', { partner }); // Assuming you have an EditPartner screen
-    };
-
     if (!partner) {
         return (
             <View style={styles.container2}>
@@ -97,7 +93,7 @@ const PartnerDetails = ({ route, navigation }) => {
                 {/* Google Map will go here in the future */}
             </View>
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.editButton} onPress={handleEditPartner}>
+                <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('Edit', { partner })}>
                     <Text style={styles.buttonText}>Edit</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.deleteButton} onPress={handleDeletePartner}>
@@ -201,7 +197,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 5,
-        marginRight: 10,
+        width: width * 0.4,
+        marginRight: 5
     },
     deleteButton: {
         flex: 1,
@@ -210,7 +207,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 5,
-        marginLeft: 10,
+        marginLeft: 5,
+        width: width * 0.45
     },
     buttonText: {
         color: '#fff',

@@ -8,8 +8,10 @@ import Sample from './pages/Sample';
 import ViewPartners from './pages/ViewPartners';
 import PartnerDetails from './pages/PartnerDetails';
 import AddPartners from './pages/AddPartners'
-// import email from './pages/email'
 import Register from './pages/Register';
+import Edit from './pages/Edit'
+// import email from './pages/email'
+
 
 
 const Stack = createStackNavigator();
@@ -25,6 +27,7 @@ function App() {
       <Stack.Screen name="Sample" component={Sample}/>
       <Stack.Screen name="Register" component={Register}/>
       <Stack.Screen name="AddPartners" component={AddPartners}/>
+      <Stack.Screen name="Edit" component={Edit}/>
       {/* <Stack.Screen name="Email" component={email}/> */}
     </Stack.Navigator>
   );

@@ -130,6 +130,19 @@ app.post('/addPartner', async (req, res) => {
   }
 });
 
+// Route to update an existing partner
+app.put('/partners/:id', async (req, res) => {
+  try {
+    const partner = await Partner.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!partner) {
+      return res.status(404).json({ message: 'Partner not found' });
+    }
+    res.json(partner);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
 // Route to delete a partner
 app.delete('/partners/:id', async (req, res) => {
   try {
@@ -142,7 +155,6 @@ app.delete('/partners/:id', async (req, res) => {
     res.status(500).send(err);
   }
 });
-
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
