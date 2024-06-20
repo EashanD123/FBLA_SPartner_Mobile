@@ -8,7 +8,7 @@ const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image source={require('../assets/spartner_logo.png')} style={styles.logo} />
-      <Text style={styles.title}>Welcome to the Career and Technical Education Department</Text>
+      <Text style={styles.title}>Welcome to the Novi High School Career and Technical Education Department</Text>
       <TouchableOpacity 
         style={styles.button} 
         onPress={() => navigation.navigate('ViewPartners')}
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     marginBottom: height * 0.06,
   },
   title: {
-    fontSize: width * 0.06,
+    fontSize: width * 0.07,
     color: '#fff',
     textAlign: 'center',
     marginBottom: height * 0.05,

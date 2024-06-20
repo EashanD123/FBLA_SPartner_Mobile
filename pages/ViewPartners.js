@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import NavigationMenu2 from '../components/NavigationMenu2';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, TextInput, FlatList, Alert } from 'react-native';
 import axios from 'axios';
+import { useFocusEffect } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -31,20 +32,24 @@ const ViewPartners = ({ navigation }) => {
         fetchNgrokUrl();
     }, []);
 
-    useEffect(() => {
-        const fetchPartners = async () => {
-            try {
-                if (ngrokUrl) {
+    useFocusEffect(
+        useCallback(() => {
+            const fetchPartners = async () => {
+                if (!ngrokUrl) {
+                    return;
+                }
+                try {
                     const response = await axios.get(`${ngrokUrl}/partners`);
                     setPartners(response.data);
+                } catch (error) {
+                    console.error('Error fetching partners:', error);
+                    Alert.alert('Error', 'Failed to fetch partners');
                 }
-            } catch (error) {
-                console.error('Error fetching partners:', error);
-            }
-        };
+            };
 
-        fetchPartners();
-    }, [ngrokUrl]);
+            fetchPartners();
+        }, [ngrokUrl])
+    );
 
     const filteredPartners = partners.filter(partner =>
         partner.name.toLowerCase().includes(searchText.toLowerCase())
@@ -76,7 +81,10 @@ const ViewPartners = ({ navigation }) => {
                     )}
                 />
             </View>
-            <NavigationMenu2 navigation={navigation}/>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AddPartners')}>
+                <Text style={styles.buttonText}>Add Partners</Text>
+            </TouchableOpacity>
+            <NavigationMenu2 navigation={navigation} />
         </View>
     );
 };
@@ -123,7 +131,7 @@ const styles = StyleSheet.create({
     },
     partnerItem: {
         width: width * 0.9,
-        height: height * 0.11,
+        height: height * 0.097,
         justifyContent: 'center',
         backgroundColor: '#34495e',
         padding: 15,
@@ -132,6 +140,15 @@ const styles = StyleSheet.create({
         borderColor: 'white',
         marginTop: 10,
     },
+    button: {
+        width: '100%',
+        height: 50,
+        backgroundColor: '#3498db', // Match button color with Login screen
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5,
+        marginTop: height * 0.01
+      },
     partnerName: {
         color: '#ecf0f1',
         fontSize: 18,
@@ -142,10 +159,15 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginTop: 5,
     },
+    buttonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+      },
     listView: {
         width: width,
-        height: height * 0.725,
-        marginTop: height * 0.0675,
+        height: height * 0.65,
+        marginTop: height * 0.072,
         alignItems: 'center'
     },
     bottomNavBar: {

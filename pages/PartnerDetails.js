@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import NavigationMenu2 from '../components/NavigationMenu2';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Alert } from 'react-native';
 import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
@@ -47,11 +47,27 @@ const PartnerDetails = ({ route, navigation }) => {
         fetchPartnerDetails();
     }, [ngrokUrl, partnerName]);
 
+    const handleDeletePartner = async () => {
+        try {
+            await axios.delete(`${ngrokUrl}/partners/${partner._id}`);
+            Alert.alert('Success', 'Partner deleted successfully');
+            navigation.navigate('ViewPartners'); // Navigate back to the list after deletion
+        } catch (error) {
+            console.log(partner._id)
+            console.error('Error deleting partner:', error);
+            Alert.alert('Error', 'Failed to delete partner');
+        }
+    };
+
+    const handleEditPartner = () => {
+        navigation.navigate('EditPartner', { partner }); // Assuming you have an EditPartner screen
+    };
+
     if (!partner) {
         return (
             <View style={styles.container2}>
                 <Text style={styles.loadingText}>Loading...</Text>
-                <NavigationMenu2/>
+                <NavigationMenu2 />
             </View>
         );
     }
@@ -78,9 +94,17 @@ const PartnerDetails = ({ route, navigation }) => {
                 <Text style={styles.text}>{partner.resources_available}</Text>
             </View>
             <View style={styles.mapBox}>
-
+                {/* Google Map will go here in the future */}
             </View>
-            <NavigationMenu2 navigation={navigation}/>
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.editButton} onPress={handleEditPartner}>
+                    <Text style={styles.buttonText}>Edit</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.deleteButton} onPress={handleDeletePartner}>
+                    <Text style={styles.buttonText}>Delete</Text>
+                </TouchableOpacity>
+            </View>
+            <NavigationMenu2 navigation={navigation} />
         </View>
     );
 };
@@ -93,9 +117,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: '5%',
     },
     container2: {
-        width: width, 
-        height: height, 
-        justifyContent: 'center', 
+        width: width,
+        height: height,
+        justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#2c3e50',
     },
@@ -129,7 +153,7 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
         marginVertical: 10,
         width: width * 0.9,
-        height: height * 0.23,
+        height: height * 0.16,
         top: height * 0.03,
         justifyContent: 'center'
     },
@@ -163,6 +187,35 @@ const styles = StyleSheet.create({
         color: '#ecf0f1',
         fontSize: 16,
         marginBottom: 5,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: height * 0.0285,
+        width: width * 0.9,
+    },
+    editButton: {
+        flex: 1,
+        height: 50,
+        backgroundColor: '#3498db', // Edit button color
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5,
+        marginRight: 10,
+    },
+    deleteButton: {
+        flex: 1,
+        height: 50,
+        backgroundColor: '#e74c3c', // Delete button color
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5,
+        marginLeft: 10,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
     },
     bottomNavBar: {
         width: width * 0.9,

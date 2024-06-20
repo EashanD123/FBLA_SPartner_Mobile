@@ -57,6 +57,12 @@ const User = mongoose.model('User', UserSchema);
 const PartnerSchema = new mongoose.Schema({
   name: String,
   description: String,
+  type_of_organization: String,
+  email: String,
+  phone: String,
+  address: String,
+  website: String,
+  resources_available: String,
 });
 
 const Partner = mongoose.model('Partner', PartnerSchema);
@@ -102,6 +108,41 @@ app.get('/partners', async (req, res) => {
     res.status(500).send(err);
   }
 });
+
+// Route to add a new partner
+app.post('/addPartner', async (req, res) => {
+  const { name, description, type_of_organization, email, phone, address, website, resources_available } = req.body;
+  try {
+    const newPartner = new Partner({
+      name,
+      description,
+      type_of_organization,
+      email,
+      phone,
+      address,
+      website,
+      resources_available,
+    });
+    await newPartner.save();
+    res.json({ message: 'Partner added successfully' });
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+// Route to delete a partner
+app.delete('/partners/:id', async (req, res) => {
+  try {
+    const partner = await Partner.findByIdAndDelete(req.params.id);
+    if (!partner) {
+      return res.status(404).json({ message: 'Partner not found' });
+    }
+    res.json({ message: 'Partner deleted successfully' });
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
