@@ -10,14 +10,17 @@ const PartnerDetails = ({ route, navigation }) => {
     const { partnerName } = route.params;
     const [partner, setPartner] = useState(null);
     const [ngrokUrl, setNgrokUrl] = useState(null);
+    const [region, setRegion] = useState({
+        latitude: 0,
+        longitude: 0,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+    });
 
-    const [posLang, setPosLang] = useState(42.466263588341945)
-    const [posLong, setPosLong] = useState(-83.4863099666966557200)
-    const [coordinates, setCoordinates] = useState(
-        {
-            latitude: 0,
-            longitude: 0,
-        });
+    const [coordinates, setCoordinates] = useState({
+        latitude: 0,
+        longitude: 0,
+    });
 
     useEffect(() => {
         const config = {
@@ -36,32 +39,38 @@ const PartnerDetails = ({ route, navigation }) => {
                 console.error('Failed to fetch ngrok URL:', error);
                 Alert.alert('Error', 'Failed to fetch server configuration.');
             }
-
         };
-        getCoordinates()
-        fetchNgrokUrl();
-    }, [coordinates]);
 
-    const getCoordinates = async () => {
-        const apiKey = 'AIzaSyDNatdfiiM0sE5k1ltYGHXRRKlyuSCkJ40';  // Replace with your actual API key
+        fetchNgrokUrl();
+    }, []);
+
+    const getCoordinates = async (data) => {
+        const apiKey = 'AIzaSyDNatdfiiM0sE5k1ltYGHXRRKlyuSCkJ40'; // Replace with your actual API key
+        const address = data.company.contact.address.street; // Assuming this is where you want to fetch coordinates
 
         try {
             const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
                 params: {
-                    address: '24463 Perceval Lane',
+                    address: address,
                     key: apiKey
                 }
             });
 
             if (response.data.status === 'OK') {
                 const location = response.data.results[0].geometry.location;
-                console.log(location.lat)
-                console.log(location.lng)
-                let temp = coordinates
-                temp.latitude = location.lat
-                temp.longitude = location.lng
-                setCoordinates(temp)
-                //Alert.alert('Success', `Latitude: ${location.lat}, Longitude: ${location.lng}`);
+
+                setRegion(prevRegion => ({
+                    ...prevRegion,
+                    latitude: location.lat,
+                    longitude: location.lng
+                }));
+
+                setCoordinates({
+                    latitude: location.lat,
+                    longitude: location.lng
+                });
+
+                // Alert.alert('Success', `Latitude: ${location.lat}, Longitude: ${location.lng}`);
             } else {
                 Alert.alert('Error', 'Failed to get coordinates. Please check the address and try again.');
             }
@@ -76,7 +85,8 @@ const PartnerDetails = ({ route, navigation }) => {
             try {
                 if (ngrokUrl) {
                     const response = await axios.get(`${ngrokUrl}/partners`);
-                    const partnerData = response.data.find(p => p.name === partnerName);
+                    const partnerData = response.data.find(p => p.company.name === partnerName);
+                    getCoordinates(partnerData);
                     setPartner(partnerData);
                 }
             } catch (error) {
@@ -93,7 +103,6 @@ const PartnerDetails = ({ route, navigation }) => {
             Alert.alert('Success', 'Partner deleted successfully');
             navigation.navigate('ViewPartners'); // Navigate back to the list after deletion
         } catch (error) {
-            console.log(partner._id)
             console.error('Error deleting partner:', error);
             Alert.alert('Error', 'Failed to delete partner');
         }
@@ -111,24 +120,24 @@ const PartnerDetails = ({ route, navigation }) => {
     return (
         <View style={styles.container}>
             <View style={styles.titleBox}>
-                <Text style={styles.title}>{partner.name}</Text>
+                <Text style={styles.title}>{partner.company.name}</Text>
             </View>
             <View style={styles.infoBox}>
                 <ScrollView>
                     <Text style={styles.label}>Description:</Text>
-                    <Text style={styles.text}>{partner.description}</Text>
+                    <Text style={styles.text}>{partner.company.description}</Text>
                     <Text style={styles.label}>Type of Organization:</Text>
-                    <Text style={styles.text}>{partner.type_of_organization}</Text>
+                    <Text style={styles.text}>{partner.company.type_of_organization}</Text>
                     <Text style={styles.label}>Email:</Text>
-                    <Text style={styles.text}>{partner.email}</Text>
+                    <Text style={styles.text}>{partner.company.contact.email}</Text>
                     <Text style={styles.label}>Phone:</Text>
-                    <Text style={styles.text}>{partner.phone}</Text>
+                    <Text style={styles.text}>{partner.company.contact.phone_number}</Text>
                     <Text style={styles.label}>Address:</Text>
-                    <Text style={styles.text}>{partner.address}</Text>
+                    <Text style={styles.text}>{partner.company.contact.address.street}</Text>
                     <Text style={styles.label}>Website:</Text>
-                    <Text style={styles.text}>{partner.website}</Text>
+                    <Text style={styles.text}>{partner.company.contact.website}</Text>
                     <Text style={styles.label}>Resources Available:</Text>
-                    <Text style={styles.text}>{partner.resources_available}</Text>
+                    <Text style={styles.text}>{partner.company.resources_available[0].resource_name}</Text>
                 </ScrollView>
             </View>
             <View style={styles.mapBox}>
@@ -136,12 +145,8 @@ const PartnerDetails = ({ route, navigation }) => {
                     style={styles.map}
                     //specify our coordinates.
                     provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
-                    initialRegion={{
-                        latitude: coordinates.latitude,
-                        longitude: coordinates.longitude,
-                        latitudeDelta: 0.01,
-                        longitudeDelta: 0.01,
-                    }}>
+                    region={region}
+                    onRegionChange={newRegion => setRegion(newRegion)}>
                     <Marker coordinate={coordinates} />
                 </MapView>
             </View>

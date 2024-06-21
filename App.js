@@ -1,4 +1,4 @@
-import React, { useState, useEffect, version } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -11,21 +11,23 @@ import AddPartners from './pages/AddPartners'
 import Register from './pages/Register';
 import Edit from './pages/Edit'
 import email from './pages/email'
+import Account from './pages/Account';
 
 //import Download from './pages/download';
 
 
 const Stack = createStackNavigator();
-global.USERID
+global.USERID;
 
 function App() {
-  return(
-    <Stack.Navigator screenOptions ={{ headerShown: false }}>
-      <Stack.Screen name="Login" component={Login}/>
-      <Stack.Screen name="Home" component={Home}/>
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false, animationEnabled: false }}>
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="ViewPartners" component={ViewPartners}/>
       <Stack.Screen name="PartnerDetails" component={PartnerDetails}/>
-      <Stack.Screen name="Sample" component={Sample}/>
+      <Stack.Screen name="Sample" component={Sample} />
+      <Stack.Screen name="Account" component={Account} />
       <Stack.Screen name="Register" component={Register}/>
       <Stack.Screen name="Email" component={email}/>
       <Stack.Screen name="Edit" component={Edit}/>
@@ -36,7 +38,7 @@ function App() {
 export default () => {
   return (
     <NavigationContainer>
-      <App/>
+      <App />
     </NavigationContainer>
-  )
-}
+  );
+};

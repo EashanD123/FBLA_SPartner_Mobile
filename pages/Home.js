@@ -9,14 +9,14 @@ const Home = ({ navigation }) => {
     <View style={styles.container}>
       <Image source={require('../assets/spartner_logo.png')} style={styles.logo} />
       <Text style={styles.title}>Welcome to the Novi High School Career and Technical Education Department</Text>
-      <TouchableOpacity 
-        style={styles.button} 
+      <TouchableOpacity
+        style={styles.button}
         onPress={() => navigation.navigate('ViewPartners')}
       >
         <Text style={styles.buttonText}>View Partners</Text>
       </TouchableOpacity>
-      <TouchableOpacity 
-        style={styles.button} 
+      <TouchableOpacity
+        style={styles.button}
         onPress={() => navigation.navigate('Search Partners')}
       >
         <Text style={styles.buttonText}>Download Report</Text>
@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    backgroundColor: '#2c3e50', // Match background color with Login screen
     backgroundColor: '#2c3e50', // Match background color with Login screen
     paddingHorizontal: '5%',
   },
@@ -47,37 +48,45 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
     marginBottom: height * 0.05,
+    marginBottom: height * 0.05,
   },
   button: {
     width: '100%',
+    height: 50,
+    backgroundColor: '#3498db', // Match button color with Login screen
     height: 50,
     backgroundColor: '#3498db', // Match button color with Login screen
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
     marginBottom: 15,
+    marginBottom: 15,
   },
   buttonText: {
     color: '#fff',
     fontSize: 18,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   bottomNavBar: {
-    width: width *0.9,
+    width: width * 0.9,
     height: 75, // Increased height to accommodate icons
     bottom: height * 0.04,
     borderRadius: 10,
-    borderColor: 'white', 
+    borderColor: 'white',
     borderWidth: 0.5
-    , 
+    ,
     position: 'absolute',
     flexDirection: 'row',
     justifyContent: 'space-around',
+    justifyContent: 'space-around',
     alignItems: 'center',
+    backgroundColor: '#34495e',
     backgroundColor: '#34495e',
   },
   navButton: {
     flex: 1,
+    justifyContent: 'center',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 2

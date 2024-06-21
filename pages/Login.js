@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Dimensions, Alert } from 'react-native';
 import axios from 'axios';
 import GoogleSignInButton from '../components/GoogleSignInButton';
-import AppleSignInButton from '../components/AppleSignInButton';
 
 const { width, height } = Dimensions.get('window');
+const ngrokUrl = 'https://b45b-83-137-6-227.ngrok-free.app';
 
 const OrSeparator = () => (
   <View style={styles.orSeparatorContainer}>
@@ -98,8 +98,7 @@ const Login = ({ navigation }) => {
       </View>
       <OrSeparator />
       <View style={styles.authenticationCont}>
-        <GoogleSignInButton />
-        <AppleSignInButton />
+        <GoogleSignInButton/>
       </View>
     </View>
   );
@@ -118,7 +117,7 @@ const styles = StyleSheet.create({
     borderRadius: (width * 0.6) / 2,
     borderWidth: 3,
     borderColor: '#fff',
-    marginTop: height * 0.09,
+    marginTop: height * 0.115,
     marginBottom: height * 0.06,
   },
   title: {

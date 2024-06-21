@@ -52,7 +52,7 @@ const ViewPartners = ({ navigation }) => {
     );
 
     const filteredPartners = partners.filter(partner =>
-        partner.name.toLowerCase().includes(searchText.toLowerCase())
+        partner.company.name.toLowerCase().includes(searchText.toLowerCase())
     );
 
     return (
@@ -74,9 +74,9 @@ const ViewPartners = ({ navigation }) => {
                     keyExtractor={item => item._id}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => (
-                        <TouchableOpacity onPress={() => navigation.navigate('PartnerDetails', { partnerName: item.name })} style={[styles.partnerItem, index === 0 && { marginTop: 0 }]}>
-                            <Text style={styles.partnerName}>{item.name}</Text>
-                            <Text style={styles.partnerInfo}>{item.description}</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('PartnerDetails', { partnerName: item.company.name })} style={[styles.partnerItem, index === 0 && { marginTop: 0 }]}>
+                            <Text style={styles.partnerName}>{item.company.name}</Text>
+                            <Text style={styles.partnerInfo}>{item.company.description}</Text>
                         </TouchableOpacity>
                     )}
                 />
