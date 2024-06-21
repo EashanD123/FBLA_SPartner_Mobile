@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import NavigationMenu2 from '../components/NavigationMenu2';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Alert, Platform, ScrollView } from 'react-native';
+import MapView, { PROVIDER_GOOGLE, Marker, Polyline, PROVIDER_DEFAULT } from 'react-native-maps';
 import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
@@ -9,6 +10,14 @@ const PartnerDetails = ({ route, navigation }) => {
     const { partnerName } = route.params;
     const [partner, setPartner] = useState(null);
     const [ngrokUrl, setNgrokUrl] = useState(null);
+
+    const [posLang, setPosLang] = useState(42.466263588341945)
+    const [posLong, setPosLong] = useState(-83.4863099666966557200)
+    const [coordinates, setCoordinates] = useState(
+        {
+            latitude: 0,
+            longitude: 0,
+        });
 
     useEffect(() => {
         const config = {
@@ -27,9 +36,40 @@ const PartnerDetails = ({ route, navigation }) => {
                 console.error('Failed to fetch ngrok URL:', error);
                 Alert.alert('Error', 'Failed to fetch server configuration.');
             }
+
         };
+        getCoordinates()
         fetchNgrokUrl();
-    }, []);
+    }, [coordinates]);
+
+    const getCoordinates = async () => {
+        const apiKey = 'AIzaSyDNatdfiiM0sE5k1ltYGHXRRKlyuSCkJ40';  // Replace with your actual API key
+
+        try {
+            const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
+                params: {
+                    address: '24463 Perceval Lane',
+                    key: apiKey
+                }
+            });
+
+            if (response.data.status === 'OK') {
+                const location = response.data.results[0].geometry.location;
+                console.log(location.lat)
+                console.log(location.lng)
+                let temp = coordinates
+                temp.latitude = location.lat
+                temp.longitude = location.lng
+                setCoordinates(temp)
+                //Alert.alert('Success', `Latitude: ${location.lat}, Longitude: ${location.lng}`);
+            } else {
+                Alert.alert('Error', 'Failed to get coordinates. Please check the address and try again.');
+            }
+        } catch (error) {
+            console.error('Error fetching coordinates:', error);
+            Alert.alert('Error', 'An error occurred. Please try again.');
+        }
+    };
 
     useEffect(() => {
         const fetchPartnerDetails = async () => {
@@ -74,23 +114,36 @@ const PartnerDetails = ({ route, navigation }) => {
                 <Text style={styles.title}>{partner.name}</Text>
             </View>
             <View style={styles.infoBox}>
-                <Text style={styles.label}>Description:</Text>
-                <Text style={styles.text}>{partner.description}</Text>
-                <Text style={styles.label}>Type of Organization:</Text>
-                <Text style={styles.text}>{partner.type_of_organization}</Text>
-                <Text style={styles.label}>Email:</Text>
-                <Text style={styles.text}>{partner.email}</Text>
-                <Text style={styles.label}>Phone:</Text>
-                <Text style={styles.text}>{partner.phone}</Text>
-                <Text style={styles.label}>Address:</Text>
-                <Text style={styles.text}>{partner.address}</Text>
-                <Text style={styles.label}>Website:</Text>
-                <Text style={styles.text}>{partner.website}</Text>
-                <Text style={styles.label}>Resources Available:</Text>
-                <Text style={styles.text}>{partner.resources_available}</Text>
+                <ScrollView>
+                    <Text style={styles.label}>Description:</Text>
+                    <Text style={styles.text}>{partner.description}</Text>
+                    <Text style={styles.label}>Type of Organization:</Text>
+                    <Text style={styles.text}>{partner.type_of_organization}</Text>
+                    <Text style={styles.label}>Email:</Text>
+                    <Text style={styles.text}>{partner.email}</Text>
+                    <Text style={styles.label}>Phone:</Text>
+                    <Text style={styles.text}>{partner.phone}</Text>
+                    <Text style={styles.label}>Address:</Text>
+                    <Text style={styles.text}>{partner.address}</Text>
+                    <Text style={styles.label}>Website:</Text>
+                    <Text style={styles.text}>{partner.website}</Text>
+                    <Text style={styles.label}>Resources Available:</Text>
+                    <Text style={styles.text}>{partner.resources_available}</Text>
+                </ScrollView>
             </View>
             <View style={styles.mapBox}>
-                {/* Google Map will go here in the future */}
+                <MapView
+                    style={styles.map}
+                    //specify our coordinates.
+                    provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
+                    initialRegion={{
+                        latitude: coordinates.latitude,
+                        longitude: coordinates.longitude,
+                        latitudeDelta: 0.01,
+                        longitudeDelta: 0.01,
+                    }}>
+                    <Marker coordinate={coordinates} />
+                </MapView>
             </View>
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('Edit', { partner })}>
@@ -143,10 +196,10 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 0.5,
         borderColor: 'white',
-        paddingLeft: 20,
-        paddingRight: 20,
-        paddingTop: 5,
-        paddingBottom: 5,
+        paddingLeft: 0,
+        paddingRight: 0,
+        paddingTop: 0,
+        paddingBottom: 0,
         marginVertical: 10,
         width: width * 0.9,
         height: height * 0.16,
@@ -175,13 +228,13 @@ const styles = StyleSheet.create({
     },
     label: {
         color: '#bdc3c7',
-        fontSize: 16,
+        fontSize: 20,
         fontWeight: 'bold',
         marginTop: 10,
     },
     text: {
         color: '#ecf0f1',
-        fontSize: 16,
+        fontSize: 20,
         marginBottom: 5,
     },
     buttonContainer: {
@@ -241,6 +294,13 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
     },
+    map: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: 'white',
+    }
 });
 
 export default PartnerDetails;

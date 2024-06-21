@@ -4,7 +4,7 @@ import RNFS from 'react-native-fs';
 import { parse } from 'json2csv';
 import { getDatabaseData } from './database'; // Assume you have a function to get data from MongoDB
 
-const App = () => {
+const Download = () => {
   const [jsonData, setJsonData] = useState(null);
 
   useEffect(() => {
@@ -91,4 +91,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default Download;

@@ -1,53 +1,106 @@
-import { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
-//import { send, EmailJSResponseStatus } from '@emailjs/react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Alert, Dimensions, ScrollView } from 'react-native';
+import { TextInput, Button, Card, Title, Paragraph, Provider as PaperProvider } from 'react-native-paper';
+import { send } from '@emailjs/react-native';
 
-export const ContactUs = () => {
-  const [email, setEmail] = useState();
-  const [name, setName] = useState();
+const { width, height } = Dimensions.get('window');
 
-  // const onSubmit = async () => {
-  //   try {
-  //     await send(
-  //       'service_ybwp7qs',
-  //       'template_x6t2sar',
-  //       {
-  //         name,
-  //         email,
-  //         message: 'This is a static message',
-  //       },
-  //       {
-  //         publicKey: 'bCkx89bOJ1T_8ZuOI',
-  //       },
-  //     );
+const EmailSender = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
 
-  //     console.log('SUCCESS!');
-  //   } catch (err) {
-  //     if (err instanceof EmailJSResponseStatus) {
-  //       console.log('EmailJS Request Failed...', err);
-  //     }
+  const sendEmail = async () => {
+    const templateParams = {
+        from_name: "Novi High Shool Career and Technical Education Department",
+        //to_name:"Partner",
+        message: message,
+        to_email: email,
+    };
 
-  //     console.log('ERROR', err);
-  //   }
-  // };
+    await send('service_ybwp7qs', 'template_x6t2sar', templateParams, {publicKey: 'APqLeD00jvyRKaGwU'})
+      .then(response => {
+        Alert.alert('Success', 'Email sent successfully!', [{ text: 'OK' }]);
+        console.log('SUCCESS!', response.status, response.text);
+      })
+      .catch(err => {
+        Alert.alert('Error', 'Failed to send email. Please try again.', [{ text: 'OK' }]);
+        console.error('FAILED...', err);
+      });
+  };
 
   return (
-    <View>
-      <TextInput
-        inputMode="email"
-        keyboardType="email-address"
-        textContentType="emailAddress"
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        inputMode="text"
-        placeholder="Name"
-        value={name}
-        onChangeText={setName}
-      />
-      <Button title="Submit" onPress={onSubmit} />
-    </View>
+    <PaperProvider>
+      <View style={styles.container}>
+        <ScrollView>
+        <Card style={styles.card}>
+          <Card.Content>
+            <Title style={styles.title}>Send Email</Title>
+            <Paragraph style={styles.paragraph}>Fill in the details below to send an email.</Paragraph>
+            <TextInput
+              label="To Email"
+              value={email}
+              onChangeText={setEmail}
+              style={styles.input}
+              keyboardType="email-address"
+              mode="outlined"
+              theme={{ colors: { primary: '#3498db', underlineColor: 'transparent' }}}
+            />
+            <TextInput
+              label="Your Message"
+              value={message}
+              onChangeText={setMessage}
+              style={[styles.input, styles.textArea]}
+              multiline
+              numberOfLines={4}
+              mode="outlined"
+              theme={{ colors: { primary: '#3498db', underlineColor: 'transparent' }}}
+            />
+            <Button mode="contained" onPress={sendEmail} style={styles.button} theme={{ colors: { primary: '#3498db' }}}>
+              Send Email
+            </Button>
+          </Card.Content>
+        </Card>
+        </ScrollView>
+      </View>
+    </PaperProvider>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: '5%',
+    backgroundColor: '#2c3e50',
+  },
+  card: {
+    padding: 20,
+    borderRadius: 10,
+    backgroundColor: '#fff',
+    elevation: 4,
+    marginTop: 200
+  },
+  title: {
+    fontSize: width * 0.075,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: height * 0.02,
+    color: '#2c3e50',
+  },
+  paragraph: {
+    textAlign: 'center',
+    marginBottom: height * 0.02,
+    color: '#2c3e50',
+  },
+  input: {
+    marginBottom: 16,
+  },
+  textArea: {
+    height: 100,
+  },
+  button: {
+    marginTop: 16,
+  },
+});
+
+export default EmailSender;
