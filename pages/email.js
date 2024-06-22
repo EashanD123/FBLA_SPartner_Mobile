@@ -1,18 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Alert, Dimensions, ScrollView } from 'react-native';
 import { TextInput, Button, Card, Title, Paragraph, Provider as PaperProvider } from 'react-native-paper';
 import { send } from '@emailjs/react-native';
 
 const { width, height } = Dimensions.get('window');
 
-const EmailSender = ({ navigation }) => {
+const EmailSender = ({ route, navigation }) => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
 
+  useEffect(() => {
+    if (route.params && route.params.email) {
+      setEmail(route.params.email);
+    }
+  }, [route.params]);
+
   const sendEmail = async () => {
     const templateParams = {
-        from_name: "Novi High Shool Career and Technical Education Department",
-        //to_name:"Partner",
+        from_name: "Novi High School Career and Technical Education Department",
         message: message,
         to_email: email,
     };
