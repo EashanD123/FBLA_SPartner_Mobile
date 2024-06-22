@@ -129,7 +129,9 @@ const PartnerDetails = ({ route, navigation }) => {
                     <Text style={styles.label}>Type of Organization:</Text>
                     <Text style={styles.text}>{partner.company.type_of_organization}</Text>
                     <Text style={styles.label}>Email:</Text>
-                    <Text style={styles.text}>{partner.company.contact.email}</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('Email', { email: partner.company.contact.email })}>
+                        <Text style={styles.linkText}>{partner.company.contact.email}</Text>
+                    </TouchableOpacity>
                     <Text style={styles.label}>Phone:</Text>
                     <Text style={styles.text}>{partner.company.contact.phone_number}</Text>
                     <Text style={styles.label}>Address:</Text>
@@ -143,7 +145,6 @@ const PartnerDetails = ({ route, navigation }) => {
             <View style={styles.mapBox}>
                 <MapView
                     style={styles.map}
-                    //specify our coordinates.
                     provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
                     region={region}
                     onRegionChange={newRegion => setRegion(newRegion)}>
@@ -242,70 +243,35 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginBottom: 5,
     },
+    linkText: {
+        color: '#3498db', // Link color
+        fontSize: 20,
+        marginBottom: 5,
+    },
     buttonContainer: {
         flexDirection: 'row',
+        marginTop: 10,
         justifyContent: 'space-between',
-        marginTop: height * 0.0285,
-        width: width * 0.9,
+        width: '100%',
     },
     editButton: {
-        flex: 1,
-        height: 50,
-        backgroundColor: '#3498db', // Edit button color
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: '#3498db',
+        padding: 10,
         borderRadius: 5,
-        width: width * 0.4,
-        marginRight: 5
+        marginRight: 10,
     },
     deleteButton: {
-        flex: 1,
-        height: 50,
-        backgroundColor: '#e74c3c', // Delete button color
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: '#e74c3c',
+        padding: 10,
         borderRadius: 5,
-        marginLeft: 5,
-        width: width * 0.45
     },
     buttonText: {
-        color: '#fff',
-        fontSize: 18,
+        color: 'white',
         fontWeight: 'bold',
     },
-    bottomNavBar: {
-        width: width * 0.9,
-        height: 75,
-        bottom: height * 0.04,
-        borderRadius: 10,
-        borderColor: 'white',
-        borderWidth: 0.5,
-        position: 'absolute',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        backgroundColor: '#34495e',
-    },
-    navButton: {
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    navIcon: {
-        width: 22,
-        height: 22,
-        marginBottom: 4,
-    },
-    navButtonText: {
-        color: '#fff',
-        fontSize: 16,
-    },
     map: {
-        width: '100%',
-        height: '100%',
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: 'white',
-    }
+        ...StyleSheet.absoluteFillObject,
+    },
 });
 
 export default PartnerDetails;
