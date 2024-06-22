@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import NavigationMenu2 from '../components/NavigationMenu2';
+// import NavigationMenu2 from '../components/NavigationMenu2';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, TextInput, FlatList, Alert } from 'react-native';
 import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
@@ -68,31 +68,33 @@ const ViewPartners = ({ navigation }) => {
                     <Image source={require('../assets/settings-sliders.png')} style={styles.filterIcon} />
                 </TouchableOpacity>
             </View>
-            <View style={styles.listView}>
-                <FlatList
-                    data={filteredPartners}
-                    keyExtractor={item => item._id}
-                    showsVerticalScrollIndicator={false}
-                    renderItem={({ item, index }) => (
-                        <TouchableOpacity onPress={() => navigation.navigate('PartnerDetails', { partnerName: item.company.name })} style={[styles.partnerItem, index === 0 && { marginTop: 0 }]}>
-                            <Text style={styles.partnerName}>{item.company.name}</Text>
-                            <Text style={styles.partnerInfo}>{item.company.description}</Text>
-                        </TouchableOpacity>
-                    )}
-                />
+            <FlatList
+                data={filteredPartners}
+                keyExtractor={item => item._id}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.listView}
+                renderItem={({ item, index }) => (
+                    <TouchableOpacity onPress={() => navigation.navigate('PartnerDetails', { partnerName: item.company.name })} style={[styles.partnerItem, index === 0 && { marginTop: 0 }]}>
+                        <Text style={styles.partnerName}>{item.company.name}</Text>
+                        <Text style={styles.partnerInfo}>{item.company.description}</Text>
+                    </TouchableOpacity>
+                )}
+            />
+            <View style={styles.bottomButtons}>
+                <TouchableOpacity onPress={() => navigation.goBack()} style={[styles.button, { marginRight: 5 }]}>
+                    <Text style={styles.buttonText}>Go Back</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('AddPartners')} style={[styles.button, { marginLeft: 5 }]}>
+                    <Text style={styles.buttonText}>Add Partners</Text>
+                </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('AddPartners')}>
-                <Text style={styles.buttonText}>Add Partners</Text>
-            </TouchableOpacity>
-            <NavigationMenu2 navigation={navigation} />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        width: width,
-        height: height,
+        flex: 1,
         alignItems: 'center',
         backgroundColor: '#2c3e50',
         paddingHorizontal: '5%',
@@ -123,11 +125,11 @@ const styles = StyleSheet.create({
         height: 24,
     },
     searchView: {
-        width: width,
-        top: height * 0.055,
+        width: '100%',
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: height * 0.05,
     },
     partnerItem: {
         width: width * 0.9,
@@ -141,14 +143,13 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     button: {
-        width: '100%',
+        width: '48%',
         height: 50,
-        backgroundColor: '#3498db', // Match button color with Login screen
+        backgroundColor: '#3498db',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 5,
-        marginTop: height * 0.01
-      },
+    },
     partnerName: {
         color: '#ecf0f1',
         fontSize: 18,
@@ -163,38 +164,18 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',
-      },
+    },
     listView: {
-        width: width,
-        height: height * 0.65,
-        marginTop: height * 0.072,
-        alignItems: 'center'
+        width: '100%',
+        flexGrow: 1,
+        alignItems: 'center',
     },
-    bottomNavBar: {
-        width: width * 0.9,
-        height: 75,
-        bottom: height * 0.04,
-        borderRadius: 10,
-        borderColor: 'white',
-        borderWidth: 0.5,
-        position: 'absolute',
+    bottomButtons: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        backgroundColor: '#34495e',
-    },
-    navButton: {
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    navIcon: {
-        width: 22,
-        height: 22,
-        marginBottom: 4,
-    },
-    navButtonText: {
-        color: '#fff',
-        fontSize: 16,
+        justifyContent: 'space-between',
+        marginTop: 10,
+        paddingHorizontal: '5%',
+        width: '100%',
     },
 });
 
