@@ -1,114 +1,224 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useRef } from 'react';
+import {
+  StyleSheet,
+  Dimensions,
+  TouchableWithoutFeedback,
+  SafeAreaView,
+  View,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
+import moment from 'moment';
+import Swiper from 'react-native-swiper';
 
-const CalendarApp = () => {
-  const [date, setDate] = useState(new Date());
-  const [month, setMonth] = useState(date.getMonth());
-  const [year, setYear] = useState(date.getFullYear());
+const { width } = Dimensions.get('window');
 
-  const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
+export default function Example() {
+  const swiper = useRef();
+  const [value, setValue] = useState(new Date());
+  const [week, setWeek] = useState(0);
 
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const firstDayIndex = new Date(year, month, 1).getDay();
-  const prevDays = new Date(year, month, 0).getDate();
+  const weeks = React.useMemo(() => {
+    const start = moment().add(week, 'weeks').startOf('week');
 
-  const prevMonth = () => {
-    setMonth(month - 1);
-    if (month === 0) {
-      setYear(year - 1);
-    }
-  };
+    return [-1, 0, 1].map(adj => {
+      return Array.from({ length: 7 }).map((_, index) => {
+        const date = moment(start).add(adj, 'week').add(index, 'day');
 
-  const nextMonth = () => {
-    setMonth(month + 1);
-    if (month === 11) {
-      setYear(year + 1);
-    }
-  };
+        return {
+          weekday: date.format('ddd'),
+          date: date.toDate(),
+        };
+      });
+    });
+  }, [week]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.calendar}>
-        <View style={styles.month}>
-          <TouchableOpacity onPress={prevMonth}><Text>Prev</Text></TouchableOpacity>
-          <Text>{months[month]} {year}</Text>
-          <TouchableOpacity onPress={nextMonth}><Text>Next</Text></TouchableOpacity>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Your Schedule</Text>
         </View>
-        <View style={styles.weekdays}>
-          <Text style={styles.weekday}>Sun</Text>
-          <Text style={styles.weekday}>Mon</Text>
-          <Text style={styles.weekday}>Tue</Text>
-          <Text style={styles.weekday}>Wed</Text>
-          <Text style={styles.weekday}>Thu</Text>
-          <Text style={styles.weekday}>Fri</Text>
-          <Text style={styles.weekday}>Sat</Text>
+
+        <View style={styles.picker}>
+          <Swiper
+            index={1}
+            ref={swiper}
+            loop={false}
+            showsPagination={false}
+            onIndexChanged={ind => {
+              if (ind === 1) {
+                return;
+              }
+              setTimeout(() => {
+                const newIndex = ind - 1;
+                const newWeek = week + newIndex;
+                setWeek(newWeek);
+                setValue(moment(value).add(newIndex, 'week').toDate());
+                swiper.current.scrollTo(1, false);
+              }, 100);
+            }}>
+            {weeks.map((dates, index) => (
+              <View style={styles.itemRow} key={index}>
+                {dates.map((item, dateIndex) => {
+                  const isActive =
+                    value.toDateString() === item.date.toDateString();
+                  return (
+                    <TouchableWithoutFeedback
+                      key={dateIndex}
+                      onPress={() => setValue(item.date)}>
+                      <View
+                        style={[
+                          styles.item,
+                          isActive && {
+                            backgroundColor: '#111',
+                            borderColor: '#111',
+                          },
+                        ]}>
+                        <Text
+                          style={[
+                            styles.itemWeekday,
+                            isActive && { color: '#fff' },
+                          ]}>
+                          {item.weekday}
+                        </Text>
+                        <Text
+                          style={[
+                            styles.itemDate,
+                            isActive && { color: '#fff' },
+                          ]}>
+                          {item.date.getDate()}
+                        </Text>
+                      </View>
+                    </TouchableWithoutFeedback>
+                  );
+                })}
+              </View>
+            ))}
+          </Swiper>
         </View>
-        <View style={styles.days}>
-          {[...Array(firstDayIndex).keys()].map((_, index) => (
-            <Text key={index} style={styles.prevDate}>{prevDays - index}</Text>
-          ))}
-          {[...Array(daysInMonth).keys()].map((day) => (
-            <TouchableOpacity key={day} style={styles.day}><Text>{day + 1}</Text></TouchableOpacity>
-          ))}
+
+        <View style={{ flex: 1, paddingHorizontal: 16, paddingVertical: 24 }}>
+          <Text style={styles.subtitle}>{value.toDateString()}</Text>
+          <View style={styles.placeholder}>
+            <View style={styles.placeholderInset}>
+              {/* Replace with your content */}
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.footer}>
+          <TouchableOpacity
+            onPress={() => {
+              // handle onPress
+            }}>
+            <View style={styles.btn}>
+              <Text style={styles.btnText}>Schedule</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    paddingVertical: 24,
   },
-  calendar: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
+  header: {
+    paddingHorizontal: 16,
   },
-  month: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
+  title: {
+    fontSize: 32,
+    fontWeight: '700',
+    color: '#1d1d1d',
+    marginBottom: 12,
   },
-  weekdays: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  weekday: {
+  picker: {
     flex: 1,
-    textAlign: 'center',
-  },
-  days: {
+    maxHeight: 74,
+    paddingVertical: 12,
     flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  day: {
-    width: '14.2857%',
-    aspectRatio: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+  },
+  subtitle: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#999999',
+    marginBottom: 12,
+  },
+  footer: {
+    marginTop: 'auto',
+    paddingHorizontal: 16,
+  },
+  /** Item */
+  item: {
+    flex: 1,
+    height: 50,
+    marginHorizontal: 4,
+    paddingVertical: 6,
+    paddingHorizontal: 4,
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    marginBottom: '2%',
-  },
-  prevDate: {
-    width: '14.2857%',
-    aspectRatio: 1,
-    justifyContent: 'center',
+    borderRadius: 8,
+    borderColor: '#e3e3e3',
+    flexDirection: 'column',
     alignItems: 'center',
-    color: '#ccc',
-    marginBottom: '2%',
+  },
+  itemRow: {
+    width: width,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    paddingHorizontal: 12,
+  },
+  itemWeekday: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: '#737373',
+    marginBottom: 4,
+  },
+  itemDate: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#111',
+  },
+  /** Placeholder */
+  placeholder: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+    height: 400,
+    marginTop: 0,
+    padding: 0,
+    backgroundColor: 'transparent',
+  },
+  placeholderInset: {
+    borderWidth: 4,
+    borderColor: '#e5e7eb',
+    borderStyle: 'dashed',
+    borderRadius: 9,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+  },
+  /** Button */
+  btn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderWidth: 1,
+    backgroundColor: '#007aff',
+    borderColor: '#007aff',
+  },
+  btnText: {
+    fontSize: 18,
+    lineHeight: 26,
+    fontWeight: '600',
+    color: '#fff',
   },
 });
-
-export default CalendarApp;
