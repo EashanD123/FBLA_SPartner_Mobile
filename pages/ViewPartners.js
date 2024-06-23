@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-// import NavigationMenu2 from '../components/NavigationMenu2';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, TextInput, FlatList, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, TextInput, FlatList, Alert, Modal } from 'react-native';
 import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -10,6 +9,7 @@ const ViewPartners = ({ navigation }) => {
     const [searchText, setSearchText] = useState('');
     const [partners, setPartners] = useState([]);
     const [ngrokUrl, setNgrokUrl] = useState(null);
+    const [showFilter, setShowFilter] = useState(false);
 
     useEffect(() => {
         const config = {
@@ -64,7 +64,7 @@ const ViewPartners = ({ navigation }) => {
                     value={searchText}
                     onChangeText={setSearchText}
                 />
-                <TouchableOpacity style={styles.filterButton}>
+                <TouchableOpacity style={styles.filterButton} onPress={() => setShowFilter(true)}>
                     <Image source={require('../assets/settings-sliders.png')} style={styles.filterIcon} />
                 </TouchableOpacity>
             </View>
@@ -80,6 +80,49 @@ const ViewPartners = ({ navigation }) => {
                     </TouchableOpacity>
                 )}
             />
+            <Modal
+                visible={showFilter}
+                transparent={true}
+                animationType='slide'
+                onRequestClose={() => setShowFilter(false)}
+            >
+            <View style={styles.filterModal}>
+                <Text style={styles.filterHeaderText}>Filter Options</Text>
+                <View style={styles.filterOption}>
+                    <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 1 */}}>
+                        {/* Add your checkbox UI for Option 1 here */}
+                        <Text style={styles.checkboxText}>Option 1</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.filterOption}>
+                    <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 2 */}}>
+                        {/* Add your checkbox UI for Option 2 here */}
+                        <Text style={styles.checkboxText}>Option 2</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.filterOption}>
+                    <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 3 */}}>
+                        {/* Add your checkbox UI for Option 3 here */}
+                        <Text style={styles.checkboxText}>Option 3</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.filterOption}>
+                    <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 4 */}}>
+                        {/* Add your checkbox UI for Option 4 here */}
+                        <Text style={styles.checkboxText}>Option 4</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.filterOption}>
+                    <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 5 */}}>
+                        {/* Add your checkbox UI for Option 5 here */}
+                        <Text style={styles.checkboxText}>Option 5</Text>
+                    </TouchableOpacity>
+                </View>
+                <TouchableOpacity style={styles.filterCloseButton} onPress={() => setShowFilter(false)}>
+                    <Text style={styles.filterCloseButtonText}>Close</Text>
+                </TouchableOpacity>
+            </View>
+            </Modal>
             <View style={styles.bottomButtons}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={[styles.button, { marginRight: 5 }]}>
                     <Text style={styles.buttonText}>Go Back</Text>
@@ -176,6 +219,48 @@ const styles = StyleSheet.create({
         marginTop: 10,
         paddingHorizontal: '5%',
         width: '100%',
+    },
+    filterModal: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    filterHeaderText: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: 'white',
+        marginBottom: 20,
+    },
+    filterCloseButton: {
+        backgroundColor: '#3498db',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+    },
+    filterCloseButtonText: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    filterOption: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    checkbox: {
+        width: 20,
+        height: 20,
+        borderWidth: 1,
+        borderColor: '#fff',
+        borderRadius: 3,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 10,
+    },
+    checkboxText: {
+        color: '#fff',
+        fontSize: 16,
     },
 });
 
