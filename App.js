@@ -31,6 +31,7 @@ function App() {
       <Stack.Screen name="Register" component={Register}/>
       <Stack.Screen name="Email" component={email}/>
       <Stack.Screen name="Edit" component={Edit}/>
+      <Stack.Screen name ="calendar" componenet={Edit}/>
     </Stack.Navigator>
   );
 }

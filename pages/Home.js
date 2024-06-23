@@ -21,6 +21,12 @@ const Home = ({ navigation }) => {
       >
         <Text style={styles.buttonText}>Download Report</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('calendar')}
+      >
+        <Text style={styles.buttonText}>Schedule</Text>
+      </TouchableOpacity>
       <NavigationMenu1 navigation={navigation} />
     </View>
   );
