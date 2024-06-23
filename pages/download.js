@@ -1,78 +1,48 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, Alert, PermissionsAndroid, Platform } from 'react-native';
-import RNFS from 'react-native-fs';
-import { parse } from 'json2csv';
-import { getDatabaseData } from './database'; // Assume you have a function to get data from MongoDB
+import React from 'react';
+import { StyleSheet, Text, View, Button, Alert } from 'react-native';
+import { jsonToCSV } from 'react-native-csv';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 
 const Download = () => {
-  const [jsonData, setJsonData] = useState(null);
-
-  useEffect(() => {
-    // Fetch data from MongoDB and set it to state
-    const fetchData = async () => {
-      try {
-        const data = await getDatabaseData(); // Replace with your actual data fetching logic
-        setJsonData(data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
+  const makeCSV = async () => {
+    const jsonData = `[
+      {
+          "Column 1": "Name",
+          "Column 2": "Surname",
+          "Column 3": "Email",
+          "Column 4": "Info"
       }
-    };
+    ]`;
 
-    fetchData();
-  }, []);
+    const CSV = jsonToCSV(jsonData);
 
-  const requestStoragePermission = async () => {
-    if (Platform.OS === 'android') {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-          {
-            title: 'Storage Permission Needed',
-            message: 'This app needs the storage permission to download files',
-            buttonNeutral: 'Ask Me Later',
-            buttonNegative: 'Cancel',
-            buttonPositive: 'OK',
-          }
-        );
-        return granted === PermissionsAndroid.RESULTS.GRANTED;
-      } catch (err) {
-        console.warn(err);
-        return false;
-      }
-    } else {
-      return true;
-    }
-  };
+    // Name the file
+    const directoryUri = FileSystem.documentDirectory;
+    const fileUri = directoryUri + 'formData.csv';
 
-  const downloadCsv = async () => {
-    if (!jsonData) {
-      Alert.alert('Error', 'No data available to download.');
-      return;
-    }
-
-    const hasPermission = await requestStoragePermission();
-    if (!hasPermission) {
-      Alert.alert('Permission Denied', 'Storage permission is required to download the file.');
-      return;
-    }
+    // Write the file to the file system
+    await FileSystem.writeAsStringAsync(fileUri, CSV);
 
     try {
-      const csvData = parse(jsonData);
-      const fileName = 'data.csv';
-      const filePath = `${RNFS.DownloadDirectoryPath}/${fileName}`;
-
-      await RNFS.writeFile(filePath, csvData, 'utf8');
-      Alert.alert('Success', `CSV file has been saved to: ${filePath}`);
+      // Check if sharing is available
+      if (await Sharing.isAvailableAsync()) {
+        // Share the file using the Sharing API
+        await Sharing.shareAsync(fileUri);
+        Alert.alert('Download Successful', 'CSV file has been saved and can be found in the Files app.');
+      } else {
+        Alert.alert('Sharing Not Available', 'Sharing is not available on this device.');
+      }
     } catch (error) {
-      console.error(error);
-      Alert.alert('Error', 'An error occurred while converting or saving the file.');
+      console.log(error);
+      Alert.alert('Download Failed', 'There was an error saving the CSV file.');
     }
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Download Data as CSV</Text>
-      <Button title="Download CSV" onPress={downloadCsv} />
+      <Button title="Download CSV" onPress={makeCSV} />
     </View>
   );
 };

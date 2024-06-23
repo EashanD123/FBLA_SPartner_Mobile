@@ -5,7 +5,7 @@ const { width, height } = Dimensions.get('window');
 
 const NavigationMenu3 = ({ navigation }) => (
   <View style={styles.bottomNavBar}>
-    <TouchableOpacity style={styles.navButton} onPress={() => navigation.goBack()}>
+    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Home')}>
       <Image source={require('../assets/arrow.png')} style={styles.navIcon} />
       <Text style={styles.navButtonText}>Go Back</Text>
     </TouchableOpacity>

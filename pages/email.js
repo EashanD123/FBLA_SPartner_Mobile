@@ -17,12 +17,12 @@ const EmailSender = ({ route, navigation }) => {
 
   const sendEmail = async () => {
     const templateParams = {
-        from_name: "Novi High School Career and Technical Education Department",
-        message: message,
-        to_email: email,
+      from_name: "Novi High School Career and Technical Education Department",
+      message: message,
+      to_email: email,
     };
 
-    await send('service_ybwp7qs', 'template_x6t2sar', templateParams, {publicKey: 'APqLeD00jvyRKaGwU'})
+    await send('service_ybwp7qs', 'template_x6t2sar', templateParams, { publicKey: 'APqLeD00jvyRKaGwU' })
       .then(response => {
         Alert.alert('Success', 'Email sent successfully!', [{ text: 'OK' }]);
         console.log('SUCCESS!', response.status, response.text);
@@ -36,7 +36,6 @@ const EmailSender = ({ route, navigation }) => {
   return (
     <PaperProvider>
       <View style={styles.container}>
-        <ScrollView>
         <Card style={styles.card}>
           <Card.Content>
             <Title style={styles.title}>Send Email</Title>
@@ -48,7 +47,7 @@ const EmailSender = ({ route, navigation }) => {
               style={styles.input}
               keyboardType="email-address"
               mode="outlined"
-              theme={{ colors: { primary: '#3498db', underlineColor: 'transparent' }}}
+              theme={{ colors: { primary: '#3498db', underlineColor: 'transparent' } }}
             />
             <TextInput
               label="Your Message"
@@ -58,14 +57,13 @@ const EmailSender = ({ route, navigation }) => {
               multiline
               numberOfLines={4}
               mode="outlined"
-              theme={{ colors: { primary: '#3498db', underlineColor: 'transparent' }}}
+              theme={{ colors: { primary: '#3498db', underlineColor: 'transparent' } }}
             />
-            <Button mode="contained" onPress={sendEmail} style={styles.button} theme={{ colors: { primary: '#3498db' }}}>
+            <Button mode="contained" onPress={sendEmail} style={styles.button} theme={{ colors: { primary: '#3498db' } }}>
               Send Email
             </Button>
           </Card.Content>
         </Card>
-        </ScrollView>
       </View>
       <View style={styles.bottomButtons}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={[styles.button, { marginRight: 5 }]}>
@@ -88,7 +86,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#fff',
     elevation: 4,
-    marginTop: 200
+    marginTop: 0
   },
   title: {
     fontSize: width * 0.075,

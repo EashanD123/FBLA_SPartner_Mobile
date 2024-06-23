@@ -17,9 +17,15 @@ const Home = ({ navigation }) => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('Search Partners')}
+        onPress={() => navigation.navigate('Download')}
       >
         <Text style={styles.buttonText}>Download Report</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('Calendar')}
+      >
+        <Text style={styles.buttonText}>Calendar</Text>
       </TouchableOpacity>
       <NavigationMenu1 navigation={navigation} />
     </View>
