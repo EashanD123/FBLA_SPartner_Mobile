@@ -91,31 +91,31 @@ const ViewPartners = ({ navigation }) => {
                 <View style={styles.filterOption}>
                     <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 1 */}}>
                         {/* Add your checkbox UI for Option 1 here */}
-                        <Text style={styles.checkboxText}>Option 1</Text>
+                        <Text style={styles.checkboxText}>Sole Proprietership</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.filterOption}>
                     <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 2 */}}>
                         {/* Add your checkbox UI for Option 2 here */}
-                        <Text style={styles.checkboxText}>Option 2</Text>
+                        <Text style={styles.checkboxText}>Partnership</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.filterOption}>
                     <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 3 */}}>
                         {/* Add your checkbox UI for Option 3 here */}
-                        <Text style={styles.checkboxText}>Option 3</Text>
+                        <Text style={styles.checkboxText}>Corporation</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.filterOption}>
                     <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 4 */}}>
                         {/* Add your checkbox UI for Option 4 here */}
-                        <Text style={styles.checkboxText}>Option 4</Text>
+                        <Text style={styles.checkboxText}>Non-Profit Corporations</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.filterOption}>
                     <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 5 */}}>
                         {/* Add your checkbox UI for Option 5 here */}
-                        <Text style={styles.checkboxText}>Option 5</Text>
+                        <Text style={styles.checkboxText}>LLC</Text>
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={styles.filterCloseButton} onPress={() => setShowFilter(false)}>
