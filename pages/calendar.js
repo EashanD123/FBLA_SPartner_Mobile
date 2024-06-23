@@ -7,24 +7,29 @@ import {
   View,
   Text,
   TouchableOpacity,
+  TextInput,
+  Picker,
 } from 'react-native';
 import moment from 'moment';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import Swiper from 'react-native-swiper';
 
 const { width } = Dimensions.get('window');
 
-export default function Example() {
+export default function ScheduleApp() {
   const swiper = useRef();
   const [value, setValue] = useState(new Date());
   const [week, setWeek] = useState(0);
+  const [startTime, setStartTime] = useState(new Date());
+  const [endTime, setEndTime] = useState(new Date());
+  const [activity, setActivity] = useState('');
+  const [selectedCompany, setSelectedCompany] = useState('');
 
   const weeks = React.useMemo(() => {
     const start = moment().add(week, 'weeks').startOf('week');
-
     return [-1, 0, 1].map(adj => {
       return Array.from({ length: 7 }).map((_, index) => {
         const date = moment(start).add(adj, 'week').add(index, 'day');
-
         return {
           weekday: date.format('ddd'),
           date: date.toDate(),
@@ -57,7 +62,8 @@ export default function Example() {
                 setValue(moment(value).add(newIndex, 'week').toDate());
                 swiper.current.scrollTo(1, false);
               }, 100);
-            }}>
+            }}
+          >
             {weeks.map((dates, index) => (
               <View style={styles.itemRow} key={index}>
                 {dates.map((item, dateIndex) => {
@@ -66,7 +72,8 @@ export default function Example() {
                   return (
                     <TouchableWithoutFeedback
                       key={dateIndex}
-                      onPress={() => setValue(item.date)}>
+                      onPress={() => setValue(item.date)}
+                    >
                       <View
                         style={[
                           styles.item,
@@ -74,19 +81,22 @@ export default function Example() {
                             backgroundColor: '#111',
                             borderColor: '#111',
                           },
-                        ]}>
+                        ]}
+                      >
                         <Text
                           style={[
                             styles.itemWeekday,
                             isActive && { color: '#fff' },
-                          ]}>
+                          ]}
+                        >
                           {item.weekday}
                         </Text>
                         <Text
                           style={[
                             styles.itemDate,
                             isActive && { color: '#fff' },
-                          ]}>
+                          ]}
+                        >
                           {item.date.getDate()}
                         </Text>
                       </View>
@@ -100,10 +110,41 @@ export default function Example() {
 
         <View style={{ flex: 1, paddingHorizontal: 16, paddingVertical: 24 }}>
           <Text style={styles.subtitle}>{value.toDateString()}</Text>
-          <View style={styles.placeholder}>
-            <View style={styles.placeholderInset}>
-              {/* Replace with your content */}
-            </View>
+          <View style={styles.form}>
+            <Text style={styles.label}>Start Time</Text>
+            <DateTimePicker
+              value={startTime}
+              mode="time"
+              is24Hour={true}
+              display="default"
+              onChange={(event, date) => setStartTime(date || startTime)}
+            />
+            <Text style={styles.label}>End Time</Text>
+            <DateTimePicker
+              value={endTime}
+              mode="time"
+              is24Hour={true}
+              display="default"
+              onChange={(event, date) => setEndTime(date || endTime)}
+            />
+            <Text style={styles.label}>Activity</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter activity description"
+              value={activity}
+              onChangeText={setActivity}
+            />
+            <Text style={styles.label}>Company</Text>
+            <Picker
+              selectedValue={selectedCompany}
+              style={styles.pickerDropdown}
+              onValueChange={(itemValue) => setSelectedCompany(itemValue)}
+            >
+              <Picker.Item label="Select a company" value="" />
+              <Picker.Item label="Company A" value="companyA" />
+              <Picker.Item label="Company B" value="companyB" />
+              <Picker.Item label="Company C" value="companyC" />
+            </Picker>
           </View>
         </View>
 
@@ -111,7 +152,9 @@ export default function Example() {
           <TouchableOpacity
             onPress={() => {
               // handle onPress
-            }}>
+              console.log('Scheduled:', { startTime, endTime, activity, selectedCompany });
+            }}
+          >
             <View style={styles.btn}>
               <Text style={styles.btnText}>Schedule</Text>
             </View>
@@ -184,24 +227,29 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#111',
   },
-  /** Placeholder */
-  placeholder: {
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-    height: 400,
-    marginTop: 0,
-    padding: 0,
-    backgroundColor: 'transparent',
+  form: {
+    flex: 1,
   },
-  placeholderInset: {
-    borderWidth: 4,
-    borderColor: '#e5e7eb',
-    borderStyle: 'dashed',
-    borderRadius: 9,
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
+  label: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1d1d1d',
+    marginVertical: 8,
+  },
+  input: {
+    height: 40,
+    borderColor: '#e3e3e3',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    marginBottom: 16,
+  },
+  pickerDropdown: {
+    height: 40,
+    borderColor: '#e3e3e3',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 8,
   },
   /** Button */
   btn: {
