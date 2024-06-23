@@ -67,6 +67,11 @@ const EmailSender = ({ route, navigation }) => {
         </Card>
         </ScrollView>
       </View>
+      <View style={styles.bottomButtons}>
+                <TouchableOpacity onPress={() => navigation.goBack()} style={[styles.button, { marginRight: 5 }]}>
+                    <Text style={styles.buttonText}>Go Back</Text>
+                </TouchableOpacity>
+      </View>
     </PaperProvider>
   );
 };
