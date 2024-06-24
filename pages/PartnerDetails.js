@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import NavigationMenu2 from '../components/NavigationMenu2';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Alert, Platform, ScrollView } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker, Polyline, PROVIDER_DEFAULT } from 'react-native-maps';
 import axios from 'axios';
+import NavigationMenu4 from '../components/NavigationMenu4';
 
 const { width, height } = Dimensions.get('window');
 
@@ -112,7 +112,7 @@ const PartnerDetails = ({ route, navigation }) => {
         return (
             <View style={styles.container2}>
                 <Text style={styles.loadingText}>Loading...</Text>
-                <NavigationMenu2 />
+                <NavigationMenu4 />
             </View>
         );
     }
@@ -159,7 +159,7 @@ const PartnerDetails = ({ route, navigation }) => {
                     <Text style={styles.buttonText}>Delete</Text>
                 </TouchableOpacity>
             </View>
-            <NavigationMenu2 navigation={navigation} />
+            <NavigationMenu4 navigation={navigation} />
         </View>
     );
 };

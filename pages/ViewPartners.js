@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: height * 0.05,
+        marginTop: height * 0.06,
     },
     partnerItem: {
         width: width * 0.9,
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     scrollView: {
-        marginTop: height * 0.02,
+        marginTop: height * 0.015,
         width: width, 
         height: height * 0.725
     },
