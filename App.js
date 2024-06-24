@@ -25,6 +25,7 @@ function App() {
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="ViewPartners" component={ViewPartners}/>
+      <Stack.Screen name="AddPartners" component={AddPartners}/>
       <Stack.Screen name="PartnerDetails" component={PartnerDetails}/>
       <Stack.Screen name="Sample" component={Sample} />
       <Stack.Screen name="Account" component={Account} />
