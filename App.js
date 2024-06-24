@@ -4,6 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Login from './pages/Login';
 import Home from './pages/Home';
+import HelpHome from './pages/HelpHome';
+import HelpViewPartners from './pages/HelpViewPartners';
 import Sample from './pages/Sample';
 import ViewPartners from './pages/ViewPartners';
 import PartnerDetails from './pages/PartnerDetails';
@@ -24,6 +26,8 @@ function App() {
     <Stack.Navigator screenOptions={{ headerShown: false, animationEnabled: false }}>
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="HelpHome" component={HelpHome} />
+      <Stack.Screen name="HelpViewPartners" component={HelpViewPartners} />
       <Stack.Screen name="ViewPartners" component={ViewPartners}/>
       <Stack.Screen name="AddPartners" component={AddPartners}/>
       <Stack.Screen name="PartnerDetails" component={PartnerDetails}/>

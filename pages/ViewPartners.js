@@ -134,7 +134,7 @@ const ViewPartners = ({ navigation }) => {
                     <Text style={styles.buttonText}>Add Partners</Text>
                 </TouchableOpacity>
             </View> */}
-            <NavigationMenu3 navigation={navigation}/>
+            <NavigationMenu3 navigation={navigation} page={"ViewPartners"}/>
         </View>
     );
 };

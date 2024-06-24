@@ -1,11 +1,13 @@
 // pages/Profile.js
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import NavigationMenu2 from '../components/NavigationMenu2';
 
-export default function Profile() {
+const Account = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>This is the Profile Page</Text>
+      <NavigationMenu2 navigation={navigation}/>
     </View>
   );
 }
@@ -22,3 +24,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
+
+export default Account;

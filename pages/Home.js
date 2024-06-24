@@ -27,7 +27,7 @@ const Home = ({ navigation }) => {
       >
         <Text style={styles.buttonText}>Calendar</Text>
       </TouchableOpacity>
-      <NavigationMenu1 navigation={navigation} />
+      <NavigationMenu1 navigation={navigation} page={"Home"} />
     </View>
   );
 }
@@ -36,8 +36,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#2c3e50', // Match background color with Login screen
-    backgroundColor: '#2c3e50', // Match background color with Login screen
+    backgroundColor: '#2c3e50', 
+    backgroundColor: '#2c3e50', 
     paddingHorizontal: '5%',
   },
   logo: {

@@ -6,14 +6,6 @@ import GoogleSignInButton from '../components/GoogleSignInButton';
 const { width, height } = Dimensions.get('window');
 const ngrokUrl = 'https://b45b-83-137-6-227.ngrok-free.app';
 
-const OrSeparator = () => (
-  <View style={styles.orSeparatorContainer}>
-    <View style={styles.line} />
-    <Text style={styles.orText}>or</Text>
-    <View style={styles.line} />
-  </View>
-);
-
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -96,10 +88,6 @@ const Login = ({ navigation }) => {
           <Text style={styles.registerButtonText}>Forgot Password? </Text>
         </TouchableOpacity>
       </View>
-      <OrSeparator />
-      <View style={styles.authenticationCont}>
-        <GoogleSignInButton/>
-      </View>
     </View>
   );
 };
@@ -117,7 +105,7 @@ const styles = StyleSheet.create({
     borderRadius: (width * 0.6) / 2,
     borderWidth: 3,
     borderColor: '#fff',
-    marginTop: height * 0.115,
+    marginTop: height * 0.17,
     marginBottom: height * 0.06,
   },
   title: {
