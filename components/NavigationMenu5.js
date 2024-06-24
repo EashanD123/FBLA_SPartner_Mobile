@@ -11,7 +11,7 @@ const NavigationMenu4 = ({ navigation, partner }) => (
     </TouchableOpacity>
     <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Edit', {partner: partner})}>
       <Image source={require('../assets/edit.png')} style={styles.navIcon} />
-      <Text style={styles.navButtonText}>Edit</Text>
+      <Text style={styles.navButtonText}>Download</Text>
     </TouchableOpacity>
     <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('SignOut')}>
       <Image source={require('../assets/info.png')} style={styles.navIcon} />
