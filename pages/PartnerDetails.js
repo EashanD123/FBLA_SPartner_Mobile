@@ -193,8 +193,8 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
         marginVertical: 10,
         width: width * 0.9,
-        height: height * 0.475,
-        top: height * 0.04,
+        height: height * 0.5,
+        marginTop: height * 0.004,
         justifyContent: 'center'
     },
     mapBox: {
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         width: width * 0.9,
         height: height * 0.16,
-        top: height * 0.03,
+        marginTop: height * 0.004,
         justifyContent: 'center'
     },
     titleBox: {
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
         width: width * 0.9,
         justifyContent: 'center',
         alignItems: 'center',
-        top: height * 0.055,
+        marginTop: height * 0.055,
         height: height * 0.055,
         paddingLeft: 20,
         paddingRight: 20,
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: 'row',
-        marginTop: 10,
+        marginTop: 0,
         justifyContent: 'space-between',
         width: '100%',
     },
@@ -259,18 +259,25 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         marginRight: 10,
+        paddingHorizontal: 12
     },
     deleteButton: {
         backgroundColor: '#e74c3c',
         padding: 10,
         borderRadius: 5,
+        paddingHorizontal: 12
     },
     buttonText: {
         color: 'white',
         fontWeight: 'bold',
+        fontSize: 22
     },
     map: {
-        ...StyleSheet.absoluteFillObject,
+        width: '100%',
+        height: '100%',
+        borderRadius: 10,
+        borderWidth: 0.5,
+        borderColor: 'white'
     },
 });
 
