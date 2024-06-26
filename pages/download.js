@@ -338,6 +338,8 @@ const styles = StyleSheet.create({
     height: height * 0.4,
     borderWidth: 1,
     borderColor: 'white',
+    borderRadius: 5,
+    padding: 2
   },
   bottomButtons: {
     flexDirection: 'row',
