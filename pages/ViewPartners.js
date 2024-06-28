@@ -89,42 +89,42 @@ const ViewPartners = ({ navigation }) => {
                 animationType='slide'
                 onRequestClose={() => setShowFilter(false)}
             >
-            <View style={styles.filterModal}>
-                <Text style={styles.filterHeaderText}>Filter Options</Text>
-                <View style={styles.filterOption}>
-                    <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 1 */}}>
-                        {/* Add your checkbox UI for Option 1 here */}
-                        <Text style={styles.checkboxText}>Sole Proprietership</Text>
+                <View style={styles.filterModal}>
+                    <Text style={styles.filterHeaderText}>Filter Options</Text>
+                    <View style={styles.filterOption}>
+                        <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 1 */ }}>
+                            {/* Add your checkbox UI for Option 1 here */}
+                            <Text style={styles.checkboxText}>Sole Proprietership</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.filterOption}>
+                        <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 2 */ }}>
+                            {/* Add your checkbox UI for Option 2 here */}
+                            <Text style={styles.checkboxText}>Partnership</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.filterOption}>
+                        <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 3 */ }}>
+                            {/* Add your checkbox UI for Option 3 here */}
+                            <Text style={styles.checkboxText}>Corporation</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.filterOption}>
+                        <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 4 */ }}>
+                            {/* Add your checkbox UI for Option 4 here */}
+                            <Text style={styles.checkboxText}>Non-Profit Corporations</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.filterOption}>
+                        <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 5 */ }}>
+                            {/* Add your checkbox UI for Option 5 here */}
+                            <Text style={styles.checkboxText}>LLC</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <TouchableOpacity style={styles.filterCloseButton} onPress={() => setShowFilter(false)}>
+                        <Text style={styles.filterCloseButtonText}>Close</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.filterOption}>
-                    <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 2 */}}>
-                        {/* Add your checkbox UI for Option 2 here */}
-                        <Text style={styles.checkboxText}>Partnership</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.filterOption}>
-                    <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 3 */}}>
-                        {/* Add your checkbox UI for Option 3 here */}
-                        <Text style={styles.checkboxText}>Corporation</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.filterOption}>
-                    <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 4 */}}>
-                        {/* Add your checkbox UI for Option 4 here */}
-                        <Text style={styles.checkboxText}>Non-Profit Corporations</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.filterOption}>
-                    <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 5 */}}>
-                        {/* Add your checkbox UI for Option 5 here */}
-                        <Text style={styles.checkboxText}>LLC</Text>
-                    </TouchableOpacity>
-                </View>
-                <TouchableOpacity style={styles.filterCloseButton} onPress={() => setShowFilter(false)}>
-                    <Text style={styles.filterCloseButtonText}>Close</Text>
-                </TouchableOpacity>
-            </View>
             </Modal>
             {/* <View style={styles.bottomButtons}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={[styles.button, { marginRight: 5 }]}>
@@ -134,7 +134,7 @@ const ViewPartners = ({ navigation }) => {
                     <Text style={styles.buttonText}>Add Partners</Text>
                 </TouchableOpacity>
             </View> */}
-            <NavigationMenu3 navigation={navigation} page={"ViewPartners"}/>
+            <NavigationMenu3 navigation={navigation} page={"ViewPartners"} />
         </View>
     );
 };
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         marginTop: height * 0.015,
-        width: width, 
+        width: width,
         height: height * 0.725
     },
     bottomButtons: {

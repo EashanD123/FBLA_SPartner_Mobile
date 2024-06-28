@@ -3,14 +3,14 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from 'rea
 
 const { width, height } = Dimensions.get('window');
 
-const NavigationMenu4 = ({ navigation, partner }) => (
+const NavigationMenu4 = ({ navigation, makeCSV }) => (
   <View style={styles.bottomNavBar}>
     <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Home')}>
       <Image source={require('../assets/arrow.png')} style={styles.navIcon} />
       <Text style={styles.navButtonText}>Go Back</Text>
     </TouchableOpacity>
-    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Edit', {partner: partner})}>
-      <Image source={require('../assets/edit.png')} style={styles.navIcon} />
+    <TouchableOpacity style={styles.navButton} onPress={makeCSV}>
+      <Image source={require('../assets/download.png')} style={{width: 26, height: 26, marginBottom: 4}} />
       <Text style={styles.navButtonText}>Download</Text>
     </TouchableOpacity>
     <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('SignOut')}>
