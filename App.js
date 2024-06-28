@@ -15,7 +15,7 @@ import Edit from './pages/Edit'
 import email from './pages/email'
 import Account from './pages/Account';
 import Calendar from './pages/calendar';
-import Download from './pages/download';
+// import Download from './pages/download';
 
 
 const Stack = createStackNavigator();
@@ -37,7 +37,7 @@ function App() {
       <Stack.Screen name="Email" component={email}/>
       <Stack.Screen name="Edit" component={Edit}/>
       <Stack.Screen name="Calendar" component={Calendar}/>
-      <Stack.Screen name="Download" component={Download}/>
+      {/* <Stack.Screen name="Download" component={Download}/> */}
     </Stack.Navigator>
   );
 }
