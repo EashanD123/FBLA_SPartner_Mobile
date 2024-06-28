@@ -3,21 +3,21 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from 'rea
 
 const { width, height } = Dimensions.get('window');
 
-const NavigationMenu1 = ({ navigation, page }) => (
+const NavigationMenu3 = ({ navigation, page }) => (
   <View style={styles.bottomNavBar}>
-    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Login')}>
-      <Image source={require('../assets/exit.png')} style={styles.navIcon} />
-      <Text style={styles.navButtonText}>Sign Out</Text>
+    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Home')}>
+      <Image source={require('../assets/arrow.png')} style={styles.navIcon} />
+      <Text style={styles.navButtonText}>Go Back</Text>
     </TouchableOpacity>
-    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Account')}>
-      <Image source={require('../assets/user.png')} style={styles.navIcon} />
-      <Text style={styles.navButtonText}>Account</Text>
+    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('AddPartners')}>
+      <Image source={require('../assets/add.png')} style={styles.navIcon} />
+      <Text style={styles.navButtonText}>Add Partner</Text>
     </TouchableOpacity>
     <TouchableOpacity
       style={styles.navButton}
       onPress={() => {
-        if (page === 'Home') {
-          navigation.navigate('HelpHome');
+        if (page === 'ViewPartners') {
+          navigation.navigate('HelpViewPartners');
         } else {
           // Handle other cases or do nothing
         }
@@ -35,13 +35,8 @@ const styles = StyleSheet.create({
     height: 75, // Increased height to accommodate icons
     bottom: height * 0.04,
     borderRadius: 10,
-<<<<<<< Updated upstream
     borderColor: 'white',
     borderWidth: 0.5,
-=======
-    borderColor: 'white', 
-    borderWidth: 0.5, 
->>>>>>> Stashed changes
     position: 'absolute',
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -65,4 +60,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NavigationMenu1;
+export default NavigationMenu3;

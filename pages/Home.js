@@ -17,17 +17,17 @@ const Home = ({ navigation }) => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('Search Partners')}
+        onPress={() => navigation.navigate('Download')}
       >
         <Text style={styles.buttonText}>Download Report</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('calendar')}
+        onPress={() => navigation.navigate('Calendar')}
       >
-        <Text style={styles.buttonText}>Schedule</Text>
+        <Text style={styles.buttonText}>Calendar</Text>
       </TouchableOpacity>
-      <NavigationMenu1 navigation={navigation} />
+      <NavigationMenu1 navigation={navigation} page={"Home"} />
     </View>
   );
 }
@@ -36,8 +36,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#2c3e50', // Match background color with Login screen
-    backgroundColor: '#2c3e50', // Match background color with Login screen
+    backgroundColor: '#2c3e50', 
+    backgroundColor: '#2c3e50', 
     paddingHorizontal: '5%',
   },
   logo: {

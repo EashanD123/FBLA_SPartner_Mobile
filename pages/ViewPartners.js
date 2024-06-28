@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, TextInput, FlatList, Alert, Modal } from 'react-native';
 import axios from 'axios';
+import NavigationMenu3 from '../components/NavigationMenu3';
 import { useFocusEffect } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
@@ -68,18 +69,20 @@ const ViewPartners = ({ navigation }) => {
                     <Image source={require('../assets/settings-sliders.png')} style={styles.filterIcon} />
                 </TouchableOpacity>
             </View>
-            <FlatList
-                data={filteredPartners}
-                keyExtractor={item => item._id}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.listView}
-                renderItem={({ item, index }) => (
-                    <TouchableOpacity onPress={() => navigation.navigate('PartnerDetails', { partnerName: item.company.name })} style={[styles.partnerItem, index === 0 && { marginTop: 0 }]}>
-                        <Text style={styles.partnerName}>{item.company.name}</Text>
-                        <Text style={styles.partnerInfo}>{item.company.description}</Text>
-                    </TouchableOpacity>
-                )}
-            />
+            <View style={styles.scrollView}>
+                <FlatList
+                    data={filteredPartners}
+                    keyExtractor={item => item._id}
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={styles.listView}
+                    renderItem={({ item, index }) => (
+                        <TouchableOpacity onPress={() => navigation.navigate('PartnerDetails', { partnerName: item.company.name })} style={[styles.partnerItem, index === 0 && { marginTop: 0 }]}>
+                            <Text style={styles.partnerName}>{item.company.name}</Text>
+                            <Text style={styles.partnerInfo}>{item.company.description}</Text>
+                        </TouchableOpacity>
+                    )}
+                />
+            </View>
             <Modal
                 visible={showFilter}
                 transparent={true}
@@ -123,14 +126,15 @@ const ViewPartners = ({ navigation }) => {
                 </TouchableOpacity>
             </View>
             </Modal>
-            <View style={styles.bottomButtons}>
+            {/* <View style={styles.bottomButtons}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={[styles.button, { marginRight: 5 }]}>
                     <Text style={styles.buttonText}>Go Back</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate('AddPartners')} style={[styles.button, { marginLeft: 5 }]}>
                     <Text style={styles.buttonText}>Add Partners</Text>
                 </TouchableOpacity>
-            </View>
+            </View> */}
+            <NavigationMenu3 navigation={navigation} page={"ViewPartners"}/>
         </View>
     );
 };
@@ -172,11 +176,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: height * 0.05,
+        marginTop: height * 0.06,
     },
     partnerItem: {
         width: width * 0.9,
-        height: height * 0.097,
+        height: height * 0.11,
         justifyContent: 'center',
         backgroundColor: '#34495e',
         padding: 15,
@@ -212,6 +216,11 @@ const styles = StyleSheet.create({
         width: '100%',
         flexGrow: 1,
         alignItems: 'center',
+    },
+    scrollView: {
+        marginTop: height * 0.015,
+        width: width, 
+        height: height * 0.725
     },
     bottomButtons: {
         flexDirection: 'row',

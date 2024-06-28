@@ -16,7 +16,7 @@ import Swiper from 'react-native-swiper';
 
 const { width } = Dimensions.get('window');
 
-export default function ScheduleApp() {
+export default function Calendar() {
   const swiper = useRef();
   const [value, setValue] = useState(new Date());
   const [week, setWeek] = useState(0);

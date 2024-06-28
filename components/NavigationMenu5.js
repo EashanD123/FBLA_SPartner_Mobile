@@ -3,26 +3,17 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from 'rea
 
 const { width, height } = Dimensions.get('window');
 
-const NavigationMenu1 = ({ navigation, page }) => (
+const NavigationMenu4 = ({ navigation, partner }) => (
   <View style={styles.bottomNavBar}>
-    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Login')}>
-      <Image source={require('../assets/exit.png')} style={styles.navIcon} />
-      <Text style={styles.navButtonText}>Sign Out</Text>
+    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Home')}>
+      <Image source={require('../assets/arrow.png')} style={styles.navIcon} />
+      <Text style={styles.navButtonText}>Go Back</Text>
     </TouchableOpacity>
-    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Account')}>
-      <Image source={require('../assets/user.png')} style={styles.navIcon} />
-      <Text style={styles.navButtonText}>Account</Text>
+    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Edit', {partner: partner})}>
+      <Image source={require('../assets/edit.png')} style={styles.navIcon} />
+      <Text style={styles.navButtonText}>Download</Text>
     </TouchableOpacity>
-    <TouchableOpacity
-      style={styles.navButton}
-      onPress={() => {
-        if (page === 'Home') {
-          navigation.navigate('HelpHome');
-        } else {
-          // Handle other cases or do nothing
-        }
-      }}
-    >
+    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('SignOut')}>
       <Image source={require('../assets/info.png')} style={styles.navIcon} />
       <Text style={styles.navButtonText}>Help</Text>
     </TouchableOpacity>
@@ -31,17 +22,13 @@ const NavigationMenu1 = ({ navigation, page }) => (
 
 const styles = StyleSheet.create({
   bottomNavBar: {
-    width: width * 0.9,
+    width: width *0.9,
     height: 75, // Increased height to accommodate icons
     bottom: height * 0.04,
     borderRadius: 10,
-<<<<<<< Updated upstream
-    borderColor: 'white',
-    borderWidth: 0.5,
-=======
     borderColor: 'white', 
-    borderWidth: 0.5, 
->>>>>>> Stashed changes
+    borderWidth: 0.5
+    , 
     position: 'absolute',
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -52,7 +39,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 2,
+    marginTop: 2
   },
   navIcon: {
     width: 22,
@@ -65,4 +52,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NavigationMenu1;
+export default NavigationMenu4;
