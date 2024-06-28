@@ -95,7 +95,7 @@ const PartnerDetails = ({ route, navigation }) => {
         };
 
         fetchPartnerDetails();
-    }, [ngrokUrl, partnerName]);
+    }, [ngrokUrl]);
 
     const handleDeletePartner = async () => {
         try {
@@ -159,7 +159,7 @@ const PartnerDetails = ({ route, navigation }) => {
                     <Text style={styles.buttonText}>Delete</Text>
                 </TouchableOpacity>
             </View>
-            <NavigationMenu4 navigation={navigation} partner={partner}/>
+            <NavigationMenu4 navigation={navigation} page={"PartnerDetails"} partner={partner}/>
         </View>
     );
 };
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
         marginVertical: 10,
         width: width * 0.9,
-        height: height * 0.5,
+        height: height * 0.485,
         marginTop: height * 0.001,
         justifyContent: 'center'
     },
@@ -206,7 +206,6 @@ const styles = StyleSheet.create({
         paddingRight: 0,
         paddingTop: 0,
         paddingBottom: 0,
-        //marginVertical: 10,
         width: width * 0.9,
         height: height * 0.16,
         marginTop: height * 0.001,
@@ -267,6 +266,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: 12,
         width: '100%',
+        marginTop: 2
     },
     buttonText: {
         color: 'white',

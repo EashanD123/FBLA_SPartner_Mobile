@@ -18,7 +18,7 @@ const HelpHome = ({ navigation }) => {
         },
         {
             question: "Q: What happens when I press the \"Download Report\" button?",
-            answer: "A: Pressing the \"Download Report\" button takes you to a page where you can download details about partners associated with Novi High School."
+            answer: "A: Pressing the \"Download Report\" button takes you to a page where you can download and analyze information about partners associated with Novi High School."
         },
         {
             question: "Q: What is the purpose of the \"Calendar\" button?",
