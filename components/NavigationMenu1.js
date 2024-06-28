@@ -35,13 +35,10 @@ const styles = StyleSheet.create({
     height: 75, // Increased height to accommodate icons
     bottom: height * 0.04,
     borderRadius: 10,
-<<<<<<< Updated upstream
     borderColor: 'white',
     borderWidth: 0.5,
-=======
     borderColor: 'white', 
     borderWidth: 0.5, 
->>>>>>> Stashed changes
     position: 'absolute',
     flexDirection: 'row',
     justifyContent: 'space-around',
