@@ -11,6 +11,13 @@ const ViewPartners = ({ navigation }) => {
     const [partners, setPartners] = useState([]);
     const [ngrokUrl, setNgrokUrl] = useState(null);
     const [showFilter, setShowFilter] = useState(false);
+    const [selectedFilters, setSelectedFilters] = useState({
+        soleProprietorship: false,
+        partnership: false,
+        corporation: false,
+        nonProfit: false,
+        llc: false,
+    });
 
     useEffect(() => {
         const config = {
@@ -52,9 +59,38 @@ const ViewPartners = ({ navigation }) => {
         }, [ngrokUrl])
     );
 
-    const filteredPartners = partners.filter(partner =>
-        partner.company.name.toLowerCase().includes(searchText.toLowerCase())
-    );
+    const handleFilterChange = (filter) => {
+        setSelectedFilters((prevFilters) => ({
+            ...prevFilters,
+            [filter]: !prevFilters[filter],
+        }));
+    };
+
+    const applyFilters = () => {
+        let filtered = partners;
+
+        if (selectedFilters.soleProprietorship) {
+            filtered = filtered.filter(partner => partner.company.type === 'Sole Proprietorship');
+        }
+        if (selectedFilters.partnership) {
+            filtered = filtered.filter(partner => partner.company.type === 'Partnership');
+        }
+        if (selectedFilters.corporation) {
+            filtered = filtered.filter(partner => partner.company.type === 'Corporation');
+        }
+        if (selectedFilters.nonProfit) {
+            filtered = filtered.filter(partner => partner.company.type === 'Non-Profit Corporation');
+        }
+        if (selectedFilters.llc) {
+            filtered = filtered.filter(partner => partner.company.type === 'LLC');
+        }
+
+        return filtered.filter(partner =>
+            partner.company.name.toLowerCase().includes(searchText.toLowerCase())
+        );
+    };
+
+    const filteredPartners = applyFilters();
 
     return (
         <View style={styles.container}>
@@ -91,49 +127,22 @@ const ViewPartners = ({ navigation }) => {
             >
                 <View style={styles.filterModal}>
                     <Text style={styles.filterHeaderText}>Filter Options</Text>
-                    <View style={styles.filterOption}>
-                        <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 1 */ }}>
-                            {/* Add your checkbox UI for Option 1 here */}
-                            <Text style={styles.checkboxText}>Sole Proprietership</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.filterOption}>
-                        <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 2 */ }}>
-                            {/* Add your checkbox UI for Option 2 here */}
-                            <Text style={styles.checkboxText}>Partnership</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.filterOption}>
-                        <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 3 */ }}>
-                            {/* Add your checkbox UI for Option 3 here */}
-                            <Text style={styles.checkboxText}>Corporation</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.filterOption}>
-                        <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 4 */ }}>
-                            {/* Add your checkbox UI for Option 4 here */}
-                            <Text style={styles.checkboxText}>Non-Profit Corporations</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.filterOption}>
-                        <TouchableOpacity style={styles.checkbox} onPress={() => {/* Handle checkbox state for Option 5 */ }}>
-                            {/* Add your checkbox UI for Option 5 here */}
-                            <Text style={styles.checkboxText}>LLC</Text>
-                        </TouchableOpacity>
-                    </View>
+                    {Object.keys(selectedFilters).map((filter) => (
+                        <View style={styles.filterOption} key={filter}>
+                            <TouchableOpacity
+                                style={[styles.checkbox, selectedFilters[filter] && styles.checkboxSelected]}
+                                onPress={() => handleFilterChange(filter)}
+                            >
+                                {selectedFilters[filter] && <Text style={styles.checkboxText}>✓</Text>}
+                            </TouchableOpacity>
+                            <Text style={styles.checkboxLabel}>{filter.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</Text>
+                        </View>
+                    ))}
                     <TouchableOpacity style={styles.filterCloseButton} onPress={() => setShowFilter(false)}>
                         <Text style={styles.filterCloseButtonText}>Close</Text>
                     </TouchableOpacity>
                 </View>
             </Modal>
-            {/* <View style={styles.bottomButtons}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={[styles.button, { marginRight: 5 }]}>
-                    <Text style={styles.buttonText}>Go Back</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('AddPartners')} style={[styles.button, { marginLeft: 5 }]}>
-                    <Text style={styles.buttonText}>Add Partners</Text>
-                </TouchableOpacity>
-            </View> */}
             <NavigationMenu3 navigation={navigation} page={"ViewPartners"} />
         </View>
     );
@@ -189,14 +198,6 @@ const styles = StyleSheet.create({
         borderColor: 'white',
         marginTop: 10,
     },
-    button: {
-        width: '48%',
-        height: 50,
-        backgroundColor: '#3498db',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 5,
-    },
     partnerName: {
         color: '#ecf0f1',
         fontSize: 18,
@@ -207,11 +208,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginTop: 5,
     },
-    buttonText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
     listView: {
         width: '100%',
         flexGrow: 1,
@@ -221,13 +217,6 @@ const styles = StyleSheet.create({
         marginTop: height * 0.015,
         width: width,
         height: height * 0.725
-    },
-    bottomButtons: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 10,
-        paddingHorizontal: '5%',
-        width: '100%',
     },
     filterModal: {
         flex: 1,
@@ -267,7 +256,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginRight: 10,
     },
+    checkboxSelected: {
+        backgroundColor: '#1abc9c',
+    },
     checkboxText: {
+        color: '#fff',
+        fontSize: 16,
+    },
+    checkboxLabel: {
         color: '#fff',
         fontSize: 16,
     },
