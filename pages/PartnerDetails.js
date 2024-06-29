@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import NavigationMenu2 from '../components/NavigationMenu2';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Alert, Platform, ScrollView } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker, Polyline, PROVIDER_DEFAULT } from 'react-native-maps';
 import axios from 'axios';
+import NavigationMenu4 from '../components/NavigationMenu4';
 
 const { width, height } = Dimensions.get('window');
 
@@ -13,8 +13,8 @@ const PartnerDetails = ({ route, navigation }) => {
     const [region, setRegion] = useState({
         latitude: 0,
         longitude: 0,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.001,
     });
 
     const [coordinates, setCoordinates] = useState({
@@ -46,7 +46,7 @@ const PartnerDetails = ({ route, navigation }) => {
 
     const getCoordinates = async (data) => {
         const apiKey = 'AIzaSyDNatdfiiM0sE5k1ltYGHXRRKlyuSCkJ40'; // Replace with your actual API key
-        const address = data.company.contact.address.street; // Assuming this is where you want to fetch coordinates
+        const address = data.company.contact.address.street + ', ' + data.company.contact.address.city ; // Assuming this is where you want to fetch coordinates
 
         try {
             const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
@@ -95,7 +95,7 @@ const PartnerDetails = ({ route, navigation }) => {
         };
 
         fetchPartnerDetails();
-    }, [ngrokUrl, partnerName]);
+    }, [ngrokUrl]);
 
     const handleDeletePartner = async () => {
         try {
@@ -112,7 +112,7 @@ const PartnerDetails = ({ route, navigation }) => {
         return (
             <View style={styles.container2}>
                 <Text style={styles.loadingText}>Loading...</Text>
-                <NavigationMenu2 />
+                <NavigationMenu4 />
             </View>
         );
     }
@@ -129,7 +129,9 @@ const PartnerDetails = ({ route, navigation }) => {
                     <Text style={styles.label}>Type of Organization:</Text>
                     <Text style={styles.text}>{partner.company.type_of_organization}</Text>
                     <Text style={styles.label}>Email:</Text>
-                    <Text style={styles.text}>{partner.company.contact.email}</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('Email', { email: partner.company.contact.email })}>
+                        <Text style={styles.linkText}>{partner.company.contact.email}</Text>
+                    </TouchableOpacity>
                     <Text style={styles.label}>Phone:</Text>
                     <Text style={styles.text}>{partner.company.contact.phone_number}</Text>
                     <Text style={styles.label}>Address:</Text>
@@ -143,7 +145,6 @@ const PartnerDetails = ({ route, navigation }) => {
             <View style={styles.mapBox}>
                 <MapView
                     style={styles.map}
-                    //specify our coordinates.
                     provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
                     region={region}
                     onRegionChange={newRegion => setRegion(newRegion)}>
@@ -151,14 +152,14 @@ const PartnerDetails = ({ route, navigation }) => {
                 </MapView>
             </View>
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('Edit', { partner })}>
+                {/* <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('Edit', { partner: partner })}>
                     <Text style={styles.buttonText}>Edit</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <TouchableOpacity style={styles.deleteButton} onPress={handleDeletePartner}>
                     <Text style={styles.buttonText}>Delete</Text>
                 </TouchableOpacity>
             </View>
-            <NavigationMenu2 navigation={navigation} />
+            <NavigationMenu4 navigation={navigation} page={"PartnerDetails"} partner={partner}/>
         </View>
     );
 };
@@ -192,8 +193,8 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
         marginVertical: 10,
         width: width * 0.9,
-        height: height * 0.475,
-        top: height * 0.04,
+        height: height * 0.485,
+        marginTop: height * 0.001,
         justifyContent: 'center'
     },
     mapBox: {
@@ -205,10 +206,9 @@ const styles = StyleSheet.create({
         paddingRight: 0,
         paddingTop: 0,
         paddingBottom: 0,
-        marginVertical: 10,
         width: width * 0.9,
         height: height * 0.16,
-        top: height * 0.03,
+        marginTop: height * 0.001,
         justifyContent: 'center'
     },
     titleBox: {
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
         width: width * 0.9,
         justifyContent: 'center',
         alignItems: 'center',
-        top: height * 0.055,
+        marginTop: height * 0.055,
         height: height * 0.055,
         paddingLeft: 20,
         paddingRight: 20,
@@ -242,70 +242,45 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginBottom: 5,
     },
+    linkText: {
+        color: '#3498db', // Link color
+        fontSize: 20,
+        marginBottom: 5,
+    },
     buttonContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: height * 0.0285,
-        width: width * 0.9,
+        marginTop: height * 0.011,
+        //justifyContent: 'space-between',
+        width: '100%',
     },
     editButton: {
-        flex: 1,
-        height: 50,
-        backgroundColor: '#3498db', // Edit button color
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: '#3498db',
+        padding: 10,
         borderRadius: 5,
-        width: width * 0.4,
-        marginRight: 5
+        marginRight: 10,
+        paddingHorizontal: 12
     },
     deleteButton: {
-        flex: 1,
-        height: 50,
-        backgroundColor: '#e74c3c', // Delete button color
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: '#e74c3c',
+        padding: 10,
         borderRadius: 5,
-        marginLeft: 5,
-        width: width * 0.45
+        paddingHorizontal: 12,
+        width: '100%',
+        marginTop: 2
     },
     buttonText: {
-        color: '#fff',
-        fontSize: 18,
+        color: 'white',
         fontWeight: 'bold',
-    },
-    bottomNavBar: {
-        width: width * 0.9,
-        height: 75,
-        bottom: height * 0.04,
-        borderRadius: 10,
-        borderColor: 'white',
-        borderWidth: 0.5,
-        position: 'absolute',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        backgroundColor: '#34495e',
-    },
-    navButton: {
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    navIcon: {
-        width: 22,
-        height: 22,
-        marginBottom: 4,
-    },
-    navButtonText: {
-        color: '#fff',
-        fontSize: 16,
+        fontSize: 22,
+        textAlign: 'center'
     },
     map: {
         width: '100%',
         height: '100%',
         borderRadius: 10,
-        borderWidth: 1,
-        borderColor: 'white',
-    }
+        borderWidth: 0.5,
+        borderColor: 'white'
+    },
 });
 
 export default PartnerDetails;

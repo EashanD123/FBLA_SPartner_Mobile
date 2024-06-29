@@ -7,17 +7,16 @@ const { width, height } = Dimensions.get('window');
 
 const Edit = ({ route, navigation }) => {
     const { partner } = route.params;
-
     const [ngrokUrl, setNgrokUrl] = useState(null);
 
-    const [name, setName] = useState(partner.name);
-    const [description, setDescription] = useState(partner.description);
-    const [typeOfOrganization, setTypeOfOrganization] = useState(partner.type_of_organization);
-    const [email, setEmail] = useState(partner.email);
-    const [phone, setPhone] = useState(partner.phone);
-    const [address, setAddress] = useState(partner.address);
-    const [website, setWebsite] = useState(partner.website);
-    const [resources, setResources] = useState(partner.resources_available);
+    const [name, setName] = useState(partner.company.name);
+    const [description, setDescription] = useState(partner.company.description);
+    const [typeOfOrganization, setTypeOfOrganization] = useState(partner.company.type_of_organization);
+    const [email, setEmail] = useState(partner.company.contact.email);
+    const [phone, setPhone] = useState(partner.company.contact.phone_number);
+    const [address, setAddress] = useState(partner.company.contact.address.street);
+    const [website, setWebsite] = useState(partner.company.contact.website);
+    const [resources, setResources] = useState(partner.company.resources_available[0].resource_name);
 
     useEffect(() => {
         const config = {
