@@ -20,7 +20,7 @@ const Edit = ({ route, navigation }) => {
     const [zipCode, setZipCode] = useState(partner.company.contact.address.zip_code);
     const [country, setCountry] = useState(partner.company.contact.address.country);
     const [website, setWebsite] = useState(partner.company.contact.website);
-    const [resources, setResources] = useState(partner.company.resources_available[0].resource_name);
+    const [resources, setResources] = useState(partner.company.resources_available.map(resource => resource.resource_name).join(', '));
 
     useEffect(() => {
         const config = {
@@ -44,7 +44,7 @@ const Edit = ({ route, navigation }) => {
     }, []);
 
     const handleUpdatePartner = async () => {
-        if (!name || !description || !typeOfOrganization || !email || !phone || !street || !city || !state || !zipCode || !country || !website || resources) {
+        if (!name || !description || !typeOfOrganization || !email || !phone || !street || !city || !state || !zipCode || !country || !website || !resources) {
             Alert.alert('Error', 'Please fill in all the fields.');
             return;
         }
@@ -54,33 +54,32 @@ const Edit = ({ route, navigation }) => {
             return;
         }
 
+        const resourcesArray = resources.split(',').map(resource => resource.trim()).filter(resource => resource.length > 0)
+        console.log(resourcesArray)
         try {
-            const response = await axios.put(`${ngrokUrl}/partners/${partner._id}`, {
+            const partnerData = {
                 company: {
-                    name: name,
-                    description: description,
-                    type_of_organization: typeOfOrganization,
+                    name: name.toString(),
+                    description: description.toString(),
+                    type_of_organization: typeOfOrganization.toString(),
                     contact: {
-                        email: email,
-                        phone_number: phone,
+                        email: email.toString(),
+                        phone_number: phone.toString(),
                         address: {
-                            street: street,
-                            city: city,
-                            state: state,
-                            zip_code: zipCode,
-                            country: country
+                            street: street.toString(),
+                            city: city.toString(),
+                            state: state.toString(),  // Set state as required
+                            zip_code: zipCode.toString(),  // Set zip code as required
+                            country: country.toString()  // Set country as required
                         },
-                        website: website
+                        website: website.toString()
                     },
-                    resources_available: [
-                        {
-                            resource_name: resources,
-                            
-                            
-                        }
-                    ]
+                    resources_available: resourcesArray.map(resource => ({
+                        resource_name: resource.toString()
+                    }))
                 }
-            });
+            };
+            const response = await axios.put(`${ngrokUrl}/partners/${partner._id}`, partnerData);
             Alert.alert('Success', 'Partner updated successfully.');
             navigation.navigate("ViewPartners"); // Navigate back after successful update
         } catch (error) {
@@ -152,6 +151,12 @@ const Edit = ({ route, navigation }) => {
                 value={website}
                 onChangeText={setWebsite}
             />
+            <TextInput
+                style={styles.input}
+                placeholder="Resources Available"
+                value={resources}
+                onChangeText={setResources}
+            />
 
             {/* {resources.map((resource, index) => (
                 <View key={index}>
@@ -208,7 +213,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 5,
-      },
+    },
     buttonText: {
         color: '#fff',
         fontSize: 16,
