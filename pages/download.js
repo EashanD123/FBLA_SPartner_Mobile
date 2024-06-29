@@ -16,7 +16,7 @@ const Download = ({ navigation }) => {
   const [ngrokUrl, setNgrokUrl] = useState(null);
   const [showFilter, setShowFilter] = useState(false);
   const [searchText, setSearchText] = useState('');
-  const [downloadList, setDownloadList] = useState([])
+  const [downloadList, setDownloadList] = useState([]);
 
   useEffect(() => {
     const config = {
@@ -59,15 +59,35 @@ const Download = ({ navigation }) => {
   );
 
   const makeCSV = async () => {
-    const CSV = jsonToCSV(selectedPartners);
+    // Map downloadList to a suitable format for CSV conversion
+    const jsonData = downloadList.map(item => ({
+      "Company Name": item.company.name,
+      "Description": item.company.description,
+      "Type of Organization": item.company.type_of_organization,
+      "Contact Email": item.company.contact.email,
+      "Phone Number": item.company.contact.phone_number,
+      "Street": item.company.contact.address.street,
+      "City": item.company.contact.address.city,
+      "State": item.company.contact.address.state,
+      "Zip Code": item.company.contact.address.zip_code,
+      "Country": item.company.contact.address.country,
+      "Website": item.company.contact.website,
+      "Resources": item.company.resources_available.map(resource => resource.resource_name).join(", ")
+    }));
 
+    const CSV = jsonToCSV(jsonData);
+
+    // Name the file
     const directoryUri = FileSystem.documentDirectory;
-    const fileUri = directoryUri + 'partnersData.csv';
+    const fileUri = directoryUri + 'partnerData.csv';
 
+    // Write the file to the file system
     await FileSystem.writeAsStringAsync(fileUri, CSV);
 
     try {
+      // Check if sharing is available
       if (await Sharing.isAvailableAsync()) {
+        // Share the file using the Sharing API
         await Sharing.shareAsync(fileUri);
         Alert.alert('Download Successful', 'CSV file has been saved and can be found in the Files app.');
       } else {
@@ -77,14 +97,6 @@ const Download = ({ navigation }) => {
       console.log(error);
       Alert.alert('Download Failed', 'There was an error saving the CSV file.');
     }
-  };
-
-  const addPartner = (partner) => {
-    setSelectedPartners([...selectedPartners, partner]);
-  };
-
-  const deletePartner = (partnerId) => {
-    setSelectedPartners(selectedPartners.filter(partner => partner._id !== partnerId));
   };
 
   const applyFilter = (criteria) => {
@@ -98,10 +110,6 @@ const Download = ({ navigation }) => {
   const filteredPartners = partners.filter(partner =>
     partner.company.name.toLowerCase().includes(searchText.toLowerCase())
   );
-
-  const [tags, setTags] = useState([
-    'css', 'flask', 'html', 'javascript', 'keras', 'python', 'tensorflow'
-  ]);
 
   const removeTag = (tag) => {
     setDownloadList(downloadList.filter(item => item !== tag));
@@ -117,14 +125,23 @@ const Download = ({ navigation }) => {
   );
 
   const addToDownloadList = (item) => {
-    if (downloadList.length == 0) {
-      console.log("add")
-      setDownloadList([item])
+    if (downloadList.length === 0) {
+      setDownloadList([item]);
     } else {
       if (!downloadList.some(downloadItem => downloadItem._id === item._id)) {
         setDownloadList([...downloadList, item]);
       }
     }
+  };
+
+  const downloadAll = () => {
+    let tempDownloadList = downloadList;
+    for (let i = 0; i < filteredPartners.length; i++) {
+      if (!tempDownloadList.some(downloadItem => downloadItem._id === filteredPartners[i]._id)) {
+        tempDownloadList = [...tempDownloadList, filteredPartners[i]];
+      }
+    }
+    setDownloadList(tempDownloadList);
   };
 
   return (
@@ -138,6 +155,9 @@ const Download = ({ navigation }) => {
         />
         <TouchableOpacity style={styles.filterButton} onPress={() => setShowFilter(true)}>
           <Image source={require('../assets/settings-sliders.png')} style={styles.filterIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.filterButton} onPress={downloadAll}>
+          <Image source={require('../assets/addAll.png')} style={[styles.downloadIcon]} />
         </TouchableOpacity>
       </View>
       <View style={styles.scrollView}>
@@ -162,9 +182,8 @@ const Download = ({ navigation }) => {
           data={downloadList}
           keyExtractor={(item, index) => index.toString()}
           renderItem={renderItem}
-          contentContainerStyle={styles.tagList}
-          numColumns={1}
-          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={true}
         />
       </View>
       <Modal
@@ -218,7 +237,7 @@ const Download = ({ navigation }) => {
                 <Text style={styles.buttonText}>Add Partners</Text>
             </TouchableOpacity>
         </View> */}
-      <NavigationMenu5 navigation={navigation} />
+      <NavigationMenu5 navigation={navigation} makeCSV={makeCSV} />
     </View>
   );
 };
@@ -232,10 +251,20 @@ const styles = StyleSheet.create({
   },
   tagList: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    //justifyContent: 'center',
     alignItems: 'center',
     width: width * 0.9,
+  },
+  selectedPartnersList: {
+    marginTop: height * 0.015,
+    width: width * 0.9,
+    height: height * 0.308,
+    borderWidth: 1,
+    borderColor: 'white',
+    borderRadius: 5,
+    padding: 2,
+    flexDirection: 'row', // Arrange items horizontally
+    flexWrap: 'wrap', // Allow items to wrap to the next line
+    alignItems: 'flex-start', // Align items at the start of each line
   },
   tagContainer: {
     flexDirection: 'row',
@@ -245,6 +274,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     margin: 5,
+    alignSelf: 'flex-start', // Ensure it sizes dynamically
   },
   tagText: {
     fontSize: 16,
@@ -254,7 +284,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   searchBar: {
-    width: width * 0.775,
+    width: width * 0.655,
     height: width * 0.12,
     marginRight: width * 0.005,
     borderColor: 'black',
@@ -278,6 +308,10 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
   },
+  downloadIcon: {
+    width: 35,
+    height: 35,
+  },
   searchView: {
     width: '100%',
     flexDirection: 'row',
@@ -288,7 +322,6 @@ const styles = StyleSheet.create({
   partnerItem: {
     width: width * 0.9,
     height: 50,
-    //justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#34495e',
     paddingHorizontal: 15,
@@ -331,13 +364,6 @@ const styles = StyleSheet.create({
     marginTop: height * 0.015,
     width: width,
     height: height * 0.4
-  },
-  selectedPartnersList: {
-    marginTop: height * 0.015,
-    width: width * .9,
-    height: height * 0.4,
-    borderWidth: 1,
-    borderColor: 'white',
   },
   bottomButtons: {
     flexDirection: 'row',
@@ -398,7 +424,6 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     marginBottom: 4,
-
   },
 });
 

@@ -8,12 +8,11 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  Picker,
-  ScrollView,
 } from 'react-native';
 import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Swiper from 'react-native-swiper';
+import { Picker } from '@react-native-picker/picker'; // Updated import
 
 const { width } = Dimensions.get('window');
 

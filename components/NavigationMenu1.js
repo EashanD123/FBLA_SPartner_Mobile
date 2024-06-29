@@ -37,8 +37,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: 'white',
     borderWidth: 0.5,
-    borderColor: 'white', 
-    borderWidth: 0.5, 
     position: 'absolute',
     flexDirection: 'row',
     justifyContent: 'space-around',
