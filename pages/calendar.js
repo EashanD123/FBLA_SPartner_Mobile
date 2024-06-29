@@ -8,6 +8,7 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
+  ScrollView,
 } from 'react-native';
 import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -130,6 +131,13 @@ export default function ScheduleApp() {
             ))}
           </Swiper>
         </View>
+
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => setShowTaskForm(true)}
+        >
+          <Text style={styles.addButtonText}>Add Task</Text>
+        </TouchableOpacity>
 
         {showTaskForm && (
           <View style={{ flex: 1, paddingHorizontal: 16, paddingVertical: 24 }}>
@@ -288,38 +296,49 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 8,
+    marginBottom: 16,
   },
-  /** Button */
   btn: {
-    flexDirection: 'row',
+    height: 50,
+    backgroundColor: '#1d1d1d',
+    borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderWidth: 1,
-    backgroundColor: '#007aff',
-    borderColor: '#007aff',
-    marginTop: 10,
+    marginBottom: 16,
   },
   btnText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#ffffff',
+    color: '#fff',
+  },
+  addButton: {
+    height: 50,
+    backgroundColor: '#007bff',
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 20,
+    marginHorizontal: 16,
+  },
+  addButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#fff',
   },
   eventsList: {
-    marginTop: 16,
+    flex: 1,
+    paddingHorizontal: 16,
   },
   eventItem: {
+    marginBottom: 16,
+    padding: 16,
     backgroundColor: '#f9f9f9',
     borderRadius: 8,
-    padding: 16,
-    marginVertical: 8,
     borderColor: '#e3e3e3',
     borderWidth: 1,
   },
   eventText: {
-    fontSize: 14,
-    color: '#333',
+    fontSize: 16,
+    color: '#1d1d1d',
   },
 });
