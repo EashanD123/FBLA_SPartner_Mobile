@@ -9,11 +9,12 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  Modal,
 } from 'react-native';
 import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Swiper from 'react-native-swiper';
-import { Picker } from '@react-native-picker/picker'; // Updated import
+import { Picker } from '@react-native-picker/picker'; 
 
 const { width } = Dimensions.get('window');
 
@@ -27,6 +28,7 @@ export default function ScheduleApp() {
   const [selectedCompany, setSelectedCompany] = useState('');
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [events, setEvents] = useState({});
+  const [modalVisible, setModalVisible] = useState(false);
 
   const weeks = React.useMemo(() => {
     const start = moment().add(week, 'weeks').startOf('week');
@@ -167,18 +169,11 @@ export default function ScheduleApp() {
                 onChangeText={setActivity}
               />
               <Text style={styles.label}>Company</Text>
-              <Picker
-                selectedValue={selectedCompany}
-                style={styles.pickerDropdown}
-                onValueChange={(itemValue) => setSelectedCompany(itemValue)}
-              >
-                <Picker.Item label="Select a company" value="" />
-                <Picker.Item label="Company A" value="companyA" />
-                <Picker.Item label="Company B" value="companyB" />
-                <Picker.Item label="Company C" value="companyC" />
-              </Picker>
+              <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.input}>
+                  <Text>{selectedCompany ? selectedCompany : "Select a company"}</Text>
+              </TouchableOpacity>
             </View>
-            <View style={styles.footer}>
+            {/* <View style={styles.footer}>
               <TouchableOpacity
                 onPress={handleSchedule}
               >
@@ -193,7 +188,7 @@ export default function ScheduleApp() {
                   <Text style={styles.btnText}>Go Back</Text>
                 </View>
               </TouchableOpacity>
-            </View>
+            </View> */}
           </View>
         )}
 
@@ -206,6 +201,35 @@ export default function ScheduleApp() {
             </View>
           ))}
         </ScrollView>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalTitle}>Select Company</Text>
+              <Picker
+                selectedValue={selectedCompany}
+                style={styles.pickerDropdown}
+                onValueChange={(itemValue) => setSelectedCompany(itemValue)}
+              >
+                <Picker.Item label="Select a company" value="" />
+                <Picker.Item label="Company A" value="companyA" />
+                <Picker.Item label="Company B" value="companyB" />
+                <Picker.Item label="Company C" value="companyC" />
+              </Picker>
+              <TouchableOpacity
+                onPress={() => setModalVisible(false)}
+                style={styles.closeButton}
+              >
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     </SafeAreaView>
   );
@@ -289,6 +313,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 8,
     marginBottom: 16,
+    justifyContent: 'center',
+    width: '100%'
   },
   pickerDropdown: {
     height: 40,
@@ -341,4 +367,45 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#1d1d1d',
   },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalView: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    minWidth: '80%',
+    maxWidth: '80%',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 10,
+    color: '#1d1d1d',
+  },
+  closeButton: {
+    marginTop: 10,
+    backgroundColor: '#007bff',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    alignSelf: 'flex-end',
+  },
+  closeButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
 });
+
