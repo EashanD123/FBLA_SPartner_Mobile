@@ -31,7 +31,7 @@ db.on('error', (err) => {
 // Ngrok API endpoint
 app.get('/ngrok-url', async (req, res) => {
   try {
-    const response = await axios.get('192.168.1.148/api/tunnels');
+    const response = await axios.get('http://127.0.0.1:4040/api/tunnels');
     const tunnels = response.data.tunnels;
     const httpTunnel = tunnels.find(tunnel => tunnel.proto === 'https'); // Look for HTTPS tunnel
     if (httpTunnel) {
@@ -49,6 +49,8 @@ app.get('/ngrok-url', async (req, res) => {
 const UserSchema = new mongoose.Schema({
   email: String,
   password: String,
+  firstName: String,
+  lastName: String,
 });
 
 const User = mongoose.model('User', UserSchema);
@@ -79,7 +81,19 @@ const PartnerSchema = new mongoose.Schema({
 
 const Partner = mongoose.model('Partner', PartnerSchema);
 
-
+// Route to get account details
+app.get('/accountDetails', async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json({ firstName: user.firstName, lastName: user.lastName, email: user.email });
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
 
 // Routes for authentication
 app.post('/login', async (req, res) => {
@@ -102,10 +116,10 @@ app.post('/login', async (req, res) => {
 
 // For demonstration purposes, create a route to register users (you can remove this in production)
 app.post('/register', async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, firstName, lastName } = req.body;
   try {
     const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
-    const newUser = new User({ email, password: hashedPassword }); // Save the hashed password
+    const newUser = new User({ email, password: hashedPassword, firstName, lastName }); // Save the hashed password
     await newUser.save();
     res.json({ message: 'User registered successfully' });
   } catch (err) {
@@ -162,5 +176,5 @@ app.delete('/partners/:id', async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+  console.log(`Server running on port ${port}`);
 });
