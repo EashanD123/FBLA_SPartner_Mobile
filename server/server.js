@@ -55,17 +55,31 @@ const User = mongoose.model('User', UserSchema);
 
 // Define a partner schema and model
 const PartnerSchema = new mongoose.Schema({
-  name: String,
-  description: String,
-  type_of_organization: String,
-  email: String,
-  phone: String,
-  address: String,
-  website: String,
-  resources_available: String,
+  company: {
+    name: String,
+    description: String,
+    type_of_organization: String,
+    contact: {
+      email: String,
+      phone_number: String,
+      address: {
+        street: String,
+        city: String,
+        state: String,
+        zip_code: String,
+        country: String
+      },
+      website: String
+    },
+    resources_available: [{
+      resource_name: String
+    }]
+  }
 });
 
 const Partner = mongoose.model('Partner', PartnerSchema);
+
+
 
 // Routes for authentication
 app.post('/login', async (req, res) => {
@@ -111,18 +125,9 @@ app.get('/partners', async (req, res) => {
 
 // Route to add a new partner
 app.post('/addPartner', async (req, res) => {
-  const { name, description, type_of_organization, email, phone, address, website, resources_available } = req.body;
+  const { company } = req.body;
   try {
-    const newPartner = new Partner({
-      name,
-      description,
-      type_of_organization,
-      email,
-      phone,
-      address,
-      website,
-      resources_available,
-    });
+    const newPartner = new Partner({ company });
     await newPartner.save();
     res.json({ message: 'Partner added successfully' });
   } catch (err) {

@@ -14,7 +14,11 @@ const Edit = ({ route, navigation }) => {
     const [typeOfOrganization, setTypeOfOrganization] = useState(partner.company.type_of_organization);
     const [email, setEmail] = useState(partner.company.contact.email);
     const [phone, setPhone] = useState(partner.company.contact.phone_number);
-    const [address, setAddress] = useState(partner.company.contact.address.street);
+    const [street, setStreet] = useState(partner.company.contact.address.street);
+    const [city, setCity] = useState(partner.company.contact.address.city);
+    const [state, setState] = useState(partner.company.contact.address.state);
+    const [zipCode, setZipCode] = useState(partner.company.contact.address.zip_code);
+    const [country, setCountry] = useState(partner.company.contact.address.country);
     const [website, setWebsite] = useState(partner.company.contact.website);
     const [resources, setResources] = useState(partner.company.resources_available[0].resource_name);
 
@@ -40,7 +44,7 @@ const Edit = ({ route, navigation }) => {
     }, []);
 
     const handleUpdatePartner = async () => {
-        if (!name || !description || !typeOfOrganization || !email || !phone || !address || !website || !resources) {
+        if (!name || !description || !typeOfOrganization || !email || !phone || !street || !city || !state || !zipCode || !country || !website || resources) {
             Alert.alert('Error', 'Please fill in all the fields.');
             return;
         }
@@ -52,14 +56,30 @@ const Edit = ({ route, navigation }) => {
 
         try {
             const response = await axios.put(`${ngrokUrl}/partners/${partner._id}`, {
-                name,
-                description,
-                type_of_organization: typeOfOrganization,
-                email,
-                phone,
-                address,
-                website,
-                resources_available: resources
+                company: {
+                    name: name,
+                    description: description,
+                    type_of_organization: typeOfOrganization,
+                    contact: {
+                        email: email,
+                        phone_number: phone,
+                        address: {
+                            street: street,
+                            city: city,
+                            state: state,
+                            zip_code: zipCode,
+                            country: country
+                        },
+                        website: website
+                    },
+                    resources_available: [
+                        {
+                            resource_name: resources,
+                            
+                            
+                        }
+                    ]
+                }
             });
             Alert.alert('Success', 'Partner updated successfully.');
             navigation.navigate("ViewPartners"); // Navigate back after successful update
@@ -70,6 +90,12 @@ const Edit = ({ route, navigation }) => {
                 Alert.alert('Error', 'An error occurred. Please try again.');
             }
         }
+    };
+
+    const handleResourceChange = (index, field, value) => {
+        const newResources = [...resources];
+        newResources[index][field] = value;
+        setResources(newResources);
     };
 
     return (
@@ -110,9 +136,15 @@ const Edit = ({ route, navigation }) => {
             />
             <TextInput
                 style={styles.input}
-                placeholder="Address"
-                value={address}
-                onChangeText={setAddress}
+                placeholder="Street"
+                value={street}
+                onChangeText={setStreet}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="City"
+                value={city}
+                onChangeText={setCity}
             />
             <TextInput
                 style={styles.input}
@@ -120,12 +152,24 @@ const Edit = ({ route, navigation }) => {
                 value={website}
                 onChangeText={setWebsite}
             />
-            <TextInput
-                style={styles.input}
-                placeholder="Resources Available"
-                value={resources}
-                onChangeText={setResources}
-            />
+
+            {/* {resources.map((resource, index) => (
+                <View key={index}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Resource Name"
+                        value={resource.resource_name}
+                        onChangeText={(text) => handleResourceChange(index, 'resource_name', text)}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Resource Description"
+                        value={resource.description}
+                        onChangeText={(text) => handleResourceChange(index, 'description', text)}
+                    />
+                </View>
+            ))} */}
+
             <TouchableOpacity style={styles.addButton} onPress={handleUpdatePartner}>
                 <Text style={styles.buttonText}>Update</Text>
             </TouchableOpacity>

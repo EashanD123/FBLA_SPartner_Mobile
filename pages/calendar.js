@@ -14,11 +14,12 @@ import {
 import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Swiper from 'react-native-swiper';
-import { Picker } from '@react-native-picker/picker'; 
+import NavigationMenu6 from '../components/NavigationMenu6';
+import { Picker } from '@react-native-picker/picker';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
-export default function ScheduleApp() {
+export default function ScheduleApp({ navigation }) {
   const swiper = useRef();
   const [value, setValue] = useState(new Date());
   const [week, setWeek] = useState(0);
@@ -61,90 +62,104 @@ export default function ScheduleApp() {
     setShowTaskForm(false);
   };
 
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Your Schedule</Text>
-        </View>
+  const addTask = () => {
+    setShowTaskForm(true)
+  }
 
-        <View style={styles.picker}>
-          <Swiper
-            index={1}
-            ref={swiper}
-            loop={false}
-            showsPagination={false}
-            onIndexChanged={ind => {
-              if (ind === 1) {
-                return;
-              }
-              setTimeout(() => {
-                const newIndex = ind - 1;
-                const newWeek = week + newIndex;
-                setWeek(newWeek);
-                setValue(moment(value).add(newIndex, 'week').toDate());
-                swiper.current.scrollTo(1, false);
-              }, 100);
-            }}
-          >
-            {weeks.map((dates, index) => (
-              <View style={styles.itemRow} key={index}>
-                {dates.map((item, dateIndex) => {
-                  const isActive =
-                    value.toDateString() === item.date.toDateString();
-                  return (
-                    <TouchableWithoutFeedback
-                      key={dateIndex}
-                      onPress={() => {
-                        setValue(item.date);
-                        setShowTaskForm(true);
-                      }}
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Your Schedule</Text>
+      </View>
+
+      <View style={styles.picker}>
+        <Swiper
+          index={1}
+          ref={swiper}
+          loop={false}
+          showsPagination={false}
+          onIndexChanged={ind => {
+            if (ind === 1) {
+              return;
+            }
+            setTimeout(() => {
+              const newIndex = ind - 1;
+              const newWeek = week + newIndex;
+              setWeek(newWeek);
+              setValue(moment(value).add(newIndex, 'week').toDate());
+              swiper.current.scrollTo(1, false);
+            }, 100);
+          }}
+        >
+          {weeks.map((dates, index) => (
+            <View style={styles.itemRow} key={index}>
+              {dates.map((item, dateIndex) => {
+                const isActive =
+                  value.toDateString() === item.date.toDateString();
+                return (
+                  <TouchableWithoutFeedback
+                    key={dateIndex}
+                    onPress={() => {
+                      setValue(item.date);
+                      setShowTaskForm(true);
+                    }}
+                  >
+                    <View
+                      style={[
+                        styles.item,
+                        isActive && {
+                          backgroundColor: '#111',
+                          borderColor: '#111',
+                        },
+                      ]}
                     >
-                      <View
+                      <Text
                         style={[
-                          styles.item,
-                          isActive && {
-                            backgroundColor: '#111',
-                            borderColor: '#111',
-                          },
+                          styles.itemWeekday,
+                          isActive && { color: '#fff' },
                         ]}
                       >
-                        <Text
-                          style={[
-                            styles.itemWeekday,
-                            isActive && { color: '#fff' },
-                          ]}
-                        >
-                          {item.weekday}
-                        </Text>
-                        <Text
-                          style={[
-                            styles.itemDate,
-                            isActive && { color: '#fff' },
-                          ]}
-                        >
-                          {item.date.getDate()}
-                        </Text>
-                      </View>
-                    </TouchableWithoutFeedback>
-                  );
-                })}
+                        {item.weekday}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.itemDate,
+                          isActive && { color: '#fff' },
+                        ]}
+                      >
+                        {item.date.getDate()}
+                      </Text>
+                    </View>
+                  </TouchableWithoutFeedback>
+                );
+              })}
+            </View>
+          ))}
+        </Swiper>
+      </View>
+
+      {!showTaskForm && (
+        <View style={{ alignItems: 'center' }}>
+          <ScrollView style={styles.eventsList}>
+            {events[value.toDateString()]?.map((event, index) => (
+              <View key={index} style={styles.eventItem}>
+                <Text style={styles.eventText}>
+                  {event.activity} - {moment(event.startTime).format('HH:mm')} to {moment(event.endTime).format('HH:mm')} ({event.selectedCompany})
+                </Text>
               </View>
             ))}
-          </Swiper>
+          </ScrollView>
+          <View style={{ alignItems: 'center', transform: [{ translateY: height * .821 }] }}>
+            <NavigationMenu6 navigation={navigation} addTask={addTask} />
+          </View>
         </View>
+      )}
 
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => setShowTaskForm(true)}
-        >
-          <Text style={styles.addButtonText}>Add Task</Text>
-        </TouchableOpacity>
-
-        {showTaskForm && (
-          <View style={{ flex: 1, paddingHorizontal: 16, paddingVertical: 24 }}>
-            <Text style={styles.subtitle}>{value.toDateString()}</Text>
-            <View style={styles.form}>
+      {showTaskForm && (
+        <View style={{ flex: 1, paddingHorizontal: 16, paddingVertical: 24 }}>
+          <Text style={styles.subtitle}>{value.toDateString()}</Text>
+          <View style={styles.form}>
+            <View style={{ alignItems: 'flex-start' }}>
               <Text style={styles.label}>Start Time</Text>
               <DateTimePicker
                 value={startTime}
@@ -152,7 +167,10 @@ export default function ScheduleApp() {
                 is24Hour={true}
                 display="default"
                 onChange={(event, date) => setStartTime(date || startTime)}
+                themeVariant='light'
               />
+            </View>
+            <View style={{alignItems: 'flex-start'}}>
               <Text style={styles.label}>End Time</Text>
               <DateTimePicker
                 value={endTime}
@@ -160,93 +178,89 @@ export default function ScheduleApp() {
                 is24Hour={true}
                 display="default"
                 onChange={(event, date) => setEndTime(date || endTime)}
+                themeVariant='light'
               />
-              <Text style={styles.label}>Activity</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter activity description"
-                value={activity}
-                onChangeText={setActivity}
-              />
-              <Text style={styles.label}>Company</Text>
-              <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.input}>
-                  <Text>{selectedCompany ? selectedCompany : "Select a company"}</Text>
-              </TouchableOpacity>
             </View>
-            {/* <View style={styles.footer}>
-              <TouchableOpacity
-                onPress={handleSchedule}
-              >
-                <View style={styles.btn}>
-                  <Text style={styles.btnText}>Schedule</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setShowTaskForm(false)}
-              >
-                <View style={styles.btn}>
-                  <Text style={styles.btnText}>Go Back</Text>
-                </View>
-              </TouchableOpacity>
-            </View> */}
+            <Text style={styles.label}>Activity</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter activity description"
+              value={activity}
+              onChangeText={setActivity}
+            />
+            <Text style={styles.label}>Company</Text>
+            <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.input}>
+              <Text style={{ color: '#fff' }}>{selectedCompany ? selectedCompany : "Select a company"}</Text>
+            </TouchableOpacity>
           </View>
-        )}
-
-        <ScrollView style={styles.eventsList}>
-          {events[value.toDateString()]?.map((event, index) => (
-            <View key={index} style={styles.eventItem}>
-              <Text style={styles.eventText}>
-                {event.activity} - {moment(event.startTime).format('HH:mm')} to {moment(event.endTime).format('HH:mm')} ({event.selectedCompany})
-              </Text>
-            </View>
-          ))}
-        </ScrollView>
-
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalTitle}>Select Company</Text>
-              <Picker
-                selectedValue={selectedCompany}
-                style={styles.pickerDropdown}
-                onValueChange={(itemValue) => setSelectedCompany(itemValue)}
-              >
-                <Picker.Item label="Select a company" value="" />
-                <Picker.Item label="Company A" value="companyA" />
-                <Picker.Item label="Company B" value="companyB" />
-                <Picker.Item label="Company C" value="companyC" />
-              </Picker>
-              <TouchableOpacity
-                onPress={() => setModalVisible(false)}
-                style={styles.closeButton}
-              >
-                <Text style={styles.closeButtonText}>Close</Text>
-              </TouchableOpacity>
-            </View>
+          <View style={styles.footer}>
+            <TouchableOpacity
+              onPress={handleSchedule}
+            >
+              <View style={styles.btn}>
+                <Text style={styles.btnText}>Schedule</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setShowTaskForm(false)}
+            >
+              <View style={styles.btn}>
+                <Text style={styles.btnText}>Go Back</Text>
+              </View>
+            </TouchableOpacity>
           </View>
-        </Modal>
-      </View>
-    </SafeAreaView>
+        </View>
+      )}
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={[styles.modalContainer, { alignItems: 'center', justifyContent: 'center', alignContent: 'center' }]}>
+          <View style={styles.modalView}>
+            <Picker
+              selectedValue={selectedCompany}
+              style={styles.pickerDropdown}
+              onValueChange={(itemValue) => setSelectedCompany(itemValue)}
+            >
+              <Picker.Item label="Select a company" value="" />
+              <Picker.Item label="Company A" value="Company A" />
+              <Picker.Item label="Company B" value="Company B" />
+              <Picker.Item label="Company C" value="Company C" />
+            </Picker>
+
+          </View>
+
+          <TouchableOpacity
+            onPress={() => setModalVisible(false)}
+            style={styles.closeButton}
+          >
+            <Text style={styles.closeButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //flex: 1,
     paddingVertical: 24,
+    backgroundColor: '#2c3e50',
+    width: width,
+    height: height
   },
   header: {
     paddingHorizontal: 16,
+    marginTop: 15
   },
   title: {
     fontSize: 32,
     fontWeight: '700',
-    color: '#1d1d1d',
+    color: '#fff',
     marginBottom: 12,
   },
   picker: {
@@ -259,7 +273,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#999999',
+    color: '#fff',
     marginBottom: 12,
   },
   footer: {
@@ -275,7 +289,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     borderWidth: 1,
     borderRadius: 8,
-    borderColor: '#e3e3e3',
+    borderColor: '#fff',
     flexDirection: 'column',
     alignItems: 'center',
   },
@@ -289,13 +303,13 @@ const styles = StyleSheet.create({
   itemWeekday: {
     fontSize: 13,
     fontWeight: '500',
-    color: '#737373',
+    color: '#fff',
     marginBottom: 4,
   },
   itemDate: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#111',
+    color: '#fff',
   },
   form: {
     flex: 1,
@@ -303,12 +317,12 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1d1d1d',
+    color: '#fff',
     marginVertical: 8,
   },
   input: {
     height: 40,
-    borderColor: '#e3e3e3',
+    borderColor: '#fff',
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 8,
@@ -316,17 +330,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%'
   },
-  pickerDropdown: {
-    height: 40,
-    borderColor: '#e3e3e3',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    marginBottom: 16,
-  },
   btn: {
     height: 50,
-    backgroundColor: '#1d1d1d',
+    backgroundColor: '#3498db',
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
@@ -339,7 +345,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     height: 50,
-    backgroundColor: '#007bff',
+    backgroundColor: '#3498db', // Match button color with Login screen
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
@@ -352,7 +358,6 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   eventsList: {
-    flex: 1,
     paddingHorizontal: 16,
   },
   eventItem: {
@@ -378,6 +383,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 20,
     shadowColor: '#000',
+    //height: 250,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -388,24 +394,19 @@ const styles = StyleSheet.create({
     minWidth: '80%',
     maxWidth: '80%',
   },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 10,
-    color: '#1d1d1d',
-  },
   closeButton: {
     marginTop: 10,
-    backgroundColor: '#007bff',
+    backgroundColor: '#3498db',
     borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    alignSelf: 'flex-end',
+    width: '80%'
   },
   closeButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+    textAlign: 'center'
   },
 });
 

@@ -14,6 +14,7 @@ const AddPartners = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
+    const [city, setCity] = useState('');
     const [website, setWebsite] = useState('');
     const [resources, setResources] = useState('');
 
@@ -39,7 +40,7 @@ const AddPartners = ({ navigation }) => {
     }, []);
 
     const handleAddPartner = async () => {
-        if (!name || !description || !typeOfOrganization || !email || !phone || !address || !website || !resources) {
+        if (!name || !description || !typeOfOrganization || !email || !phone || !address || !website || !resources || !city) {
             Alert.alert('Error', 'Please fill in all the fields.');
             return;
         }
@@ -49,17 +50,33 @@ const AddPartners = ({ navigation }) => {
             return;
         }
 
+        const partnerData = {
+            company: {
+                name: name.toString(),
+                description: description.toString(),
+                type_of_organization: typeOfOrganization.toString(),
+                contact: {
+                    email,
+                    phone_number: phone.toString(),
+                    address: {
+                        street: address.toString(),
+                        city: city.toString(),
+                        state: 'MI',  // Set state as required
+                        zip_code: '48375',  // Set zip code as required
+                        country: 'USA'  // Set country as required
+                    },
+                    website: website.toString()
+                },
+                resources_available: [
+                    {
+                        resource_name: resources.toString(),
+                    }
+                ]
+            }
+        };
+
         try {
-            const response = await axios.post(`${ngrokUrl}/addPartner`, {
-                name,
-                description,
-                typeOfOrganization,
-                email,
-                phone,
-                address,
-                website,
-                resources
-            });
+            const response = await axios.post(`${ngrokUrl}/addPartner`, partnerData);
             Alert.alert('Success', 'Partner added successfully.');
             navigation.goBack(); // Navigate back after successful addition
         } catch (error) {
@@ -70,6 +87,7 @@ const AddPartners = ({ navigation }) => {
             }
         }
     };
+
 
     return (
         <View style={styles.container}>
@@ -112,6 +130,12 @@ const AddPartners = ({ navigation }) => {
                 placeholder="Address"
                 value={address}
                 onChangeText={setAddress}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="City"
+                value={city}
+                onChangeText={setCity}
             />
             <TextInput
                 style={styles.input}
@@ -163,7 +187,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 5,
-      },
+    },
     buttonText: {
         color: '#fff',
         fontSize: 16,

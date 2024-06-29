@@ -37,7 +37,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: '#2c3e50', 
-    backgroundColor: '#2c3e50', 
     paddingHorizontal: '5%',
   },
   logo: {
@@ -58,8 +57,6 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-    height: 50,
-    backgroundColor: '#3498db', // Match button color with Login screen
     height: 50,
     backgroundColor: '#3498db', // Match button color with Login screen
     justifyContent: 'center',

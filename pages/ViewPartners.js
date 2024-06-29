@@ -70,19 +70,19 @@ const ViewPartners = ({ navigation }) => {
         let filtered = partners;
 
         if (selectedFilters.soleProprietorship) {
-            filtered = filtered.filter(partner => partner.company.type === 'Sole Proprietorship');
+            filtered = filtered.filter(partner => partner.company.type_of_organization === 'Sole Proprietorship');
         }
         if (selectedFilters.partnership) {
-            filtered = filtered.filter(partner => partner.company.type === 'Partnership');
+            filtered = filtered.filter(partner => partner.company.type_of_organization === 'Partnership');
         }
         if (selectedFilters.corporation) {
-            filtered = filtered.filter(partner => partner.company.type === 'Corporation');
+            filtered = filtered.filter(partner => partner.company.type_of_organization === 'Corporation');
         }
         if (selectedFilters.nonProfit) {
-            filtered = filtered.filter(partner => partner.company.type === 'Non-Profit Corporation');
+            filtered = filtered.filter(partner => partner.company.type_of_organization === 'Non-Profit Corporation');
         }
         if (selectedFilters.llc) {
-            filtered = filtered.filter(partner => partner.company.type === 'LLC');
+            filtered = filtered.filter(partner => partner.company.type_of_organization === 'LLC');
         }
 
         return filtered.filter(partner =>

@@ -3,26 +3,17 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from 'rea
 
 const { width, height } = Dimensions.get('window');
 
-const NavigationMenu4 = ({ navigation, page, partner }) => (
+const NavigationMenu4 = ({ navigation, addTask }) => (
   <View style={styles.bottomNavBar}>
-    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('ViewPartners')}>
+    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Home')}>
       <Image source={require('../assets/arrow.png')} style={styles.navIcon} />
       <Text style={styles.navButtonText}>Go Back</Text>
     </TouchableOpacity>
-    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Edit', { partner: partner })}>
-      <Image source={require('../assets/edit.png')} style={styles.navIcon} />
-      <Text style={styles.navButtonText}>Edit</Text>
+    <TouchableOpacity style={styles.navButton} onPress={addTask}>
+      <Image source={require('../assets/add.png')} style={{width: 26, height: 26, marginBottom: 4}} />
+      <Text style={styles.navButtonText}>Add Task</Text>
     </TouchableOpacity>
-    <TouchableOpacity
-      style={styles.navButton}
-      onPress={() => {
-        if (page === 'PartnerDetails') {
-          navigation.navigate('HelpPartnerDetails');
-        } else {
-          // Handle other cases or do nothing
-        }
-      }}
-    >
+    <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('SignOut')}>
       <Image source={require('../assets/info.png')} style={styles.navIcon} />
       <Text style={styles.navButtonText}>Help</Text>
     </TouchableOpacity>
@@ -31,13 +22,13 @@ const NavigationMenu4 = ({ navigation, page, partner }) => (
 
 const styles = StyleSheet.create({
   bottomNavBar: {
-    width: width * 0.9,
+    width: width *0.9,
     height: 75, // Increased height to accommodate icons
     bottom: height * 0.04,
     borderRadius: 10,
-    borderColor: 'white',
+    borderColor: 'white', 
     borderWidth: 0.5
-    ,
+    , 
     position: 'absolute',
     flexDirection: 'row',
     justifyContent: 'space-around',
