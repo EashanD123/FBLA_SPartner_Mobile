@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   TextInput,
   Picker,
+  ScrollView,
 } from 'react-native';
 import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -16,7 +17,7 @@ import Swiper from 'react-native-swiper';
 
 const { width } = Dimensions.get('window');
 
-export default function Calendar() {
+export default function ScheduleApp() {
   const swiper = useRef();
   const [value, setValue] = useState(new Date());
   const [week, setWeek] = useState(0);
@@ -24,6 +25,8 @@ export default function Calendar() {
   const [endTime, setEndTime] = useState(new Date());
   const [activity, setActivity] = useState('');
   const [selectedCompany, setSelectedCompany] = useState('');
+  const [showTaskForm, setShowTaskForm] = useState(false);
+  const [events, setEvents] = useState({});
 
   const weeks = React.useMemo(() => {
     const start = moment().add(week, 'weeks').startOf('week');
@@ -37,6 +40,24 @@ export default function Calendar() {
       });
     });
   }, [week]);
+
+  const handleSchedule = () => {
+    const dateKey = value.toDateString();
+    const newEvent = {
+      startTime,
+      endTime,
+      activity,
+      selectedCompany,
+    };
+    setEvents(prevEvents => {
+      const dateEvents = prevEvents[dateKey] || [];
+      return {
+        ...prevEvents,
+        [dateKey]: [...dateEvents, newEvent],
+      };
+    });
+    setShowTaskForm(false);
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -72,7 +93,10 @@ export default function Calendar() {
                   return (
                     <TouchableWithoutFeedback
                       key={dateIndex}
-                      onPress={() => setValue(item.date)}
+                      onPress={() => {
+                        setValue(item.date);
+                        setShowTaskForm(true);
+                      }}
                     >
                       <View
                         style={[
@@ -108,58 +132,73 @@ export default function Calendar() {
           </Swiper>
         </View>
 
-        <View style={{ flex: 1, paddingHorizontal: 16, paddingVertical: 24 }}>
-          <Text style={styles.subtitle}>{value.toDateString()}</Text>
-          <View style={styles.form}>
-            <Text style={styles.label}>Start Time</Text>
-            <DateTimePicker
-              value={startTime}
-              mode="time"
-              is24Hour={true}
-              display="default"
-              onChange={(event, date) => setStartTime(date || startTime)}
-            />
-            <Text style={styles.label}>End Time</Text>
-            <DateTimePicker
-              value={endTime}
-              mode="time"
-              is24Hour={true}
-              display="default"
-              onChange={(event, date) => setEndTime(date || endTime)}
-            />
-            <Text style={styles.label}>Activity</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter activity description"
-              value={activity}
-              onChangeText={setActivity}
-            />
-            <Text style={styles.label}>Company</Text>
-            <Picker
-              selectedValue={selectedCompany}
-              style={styles.pickerDropdown}
-              onValueChange={(itemValue) => setSelectedCompany(itemValue)}
-            >
-              <Picker.Item label="Select a company" value="" />
-              <Picker.Item label="Company A" value="companyA" />
-              <Picker.Item label="Company B" value="companyB" />
-              <Picker.Item label="Company C" value="companyC" />
-            </Picker>
-          </View>
-        </View>
-
-        <View style={styles.footer}>
-          <TouchableOpacity
-            onPress={() => {
-              // handle onPress
-              console.log('Scheduled:', { startTime, endTime, activity, selectedCompany });
-            }}
-          >
-            <View style={styles.btn}>
-              <Text style={styles.btnText}>Schedule</Text>
+        {showTaskForm && (
+          <View style={{ flex: 1, paddingHorizontal: 16, paddingVertical: 24 }}>
+            <Text style={styles.subtitle}>{value.toDateString()}</Text>
+            <View style={styles.form}>
+              <Text style={styles.label}>Start Time</Text>
+              <DateTimePicker
+                value={startTime}
+                mode="time"
+                is24Hour={true}
+                display="default"
+                onChange={(event, date) => setStartTime(date || startTime)}
+              />
+              <Text style={styles.label}>End Time</Text>
+              <DateTimePicker
+                value={endTime}
+                mode="time"
+                is24Hour={true}
+                display="default"
+                onChange={(event, date) => setEndTime(date || endTime)}
+              />
+              <Text style={styles.label}>Activity</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter activity description"
+                value={activity}
+                onChangeText={setActivity}
+              />
+              <Text style={styles.label}>Company</Text>
+              <Picker
+                selectedValue={selectedCompany}
+                style={styles.pickerDropdown}
+                onValueChange={(itemValue) => setSelectedCompany(itemValue)}
+              >
+                <Picker.Item label="Select a company" value="" />
+                <Picker.Item label="Company A" value="companyA" />
+                <Picker.Item label="Company B" value="companyB" />
+                <Picker.Item label="Company C" value="companyC" />
+              </Picker>
             </View>
-          </TouchableOpacity>
-        </View>
+            <View style={styles.footer}>
+              <TouchableOpacity
+                onPress={handleSchedule}
+              >
+                <View style={styles.btn}>
+                  <Text style={styles.btnText}>Schedule</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setShowTaskForm(false)}
+              >
+                <View style={styles.btn}>
+                  <Text style={styles.btnText}>Go Back</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
+        <ScrollView style={styles.eventsList}>
+          {events[value.toDateString()]?.map((event, index) => (
+            <View key={index} style={styles.eventItem}>
+              <Text style={styles.eventText}>
+                {event.activity} - {moment(event.startTime).format('HH:mm')} to {moment(event.endTime).format('HH:mm')} ({event.selectedCompany})
+              </Text>
+            </View>
+          ))}
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
@@ -262,11 +301,26 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: '#007aff',
     borderColor: '#007aff',
+    marginTop: 10,
   },
   btnText: {
-    fontSize: 18,
-    lineHeight: 26,
+    fontSize: 16,
     fontWeight: '600',
-    color: '#fff',
+    color: '#ffffff',
+  },
+  eventsList: {
+    marginTop: 16,
+  },
+  eventItem: {
+    backgroundColor: '#f9f9f9',
+    borderRadius: 8,
+    padding: 16,
+    marginVertical: 8,
+    borderColor: '#e3e3e3',
+    borderWidth: 1,
+  },
+  eventText: {
+    fontSize: 14,
+    color: '#333',
   },
 });
