@@ -5,13 +5,15 @@ import axios from 'axios';
 const { width, height } = Dimensions.get('window');
 
 const Register = ({ navigation }) => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [ngrokUrl, setNgrokUrl] = useState(null);
 
   const [reload, setReload] = useState("Register")
-  const [missing, setMissing] = useState([false, false, false])
+  const [missing, setMissing] = useState([false, false, false, false, false])
 
   useEffect(() => {
     const config = {
@@ -36,28 +38,33 @@ const Register = ({ navigation }) => {
   }, []);
 
   const handleRegister = async () => {
-    let temp = missing
-    for (let i = 0; i < 3; i++) {
-      temp[i] = false
+    let temp = [...missing];
+    for (let i = 0; i < 5; i++) {
+      temp[i] = false;
     }
-    console.log(email)
+
+    if (firstName == "") {
+      temp[0] = true;
+    }
+    if (lastName == "") {
+      temp[1] = true;
+    }
     if (email == "") {
-      temp[0] = true
+      temp[2] = true;
     }
     if (password == "") {
-      temp[1] = true
+      temp[3] = true;
     }
     if (confirmPassword == "") {
-      temp[2] = true
+      temp[4] = true;
     }
 
-
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 5; i++) {
       if (temp[i]) {
-        setMissing(temp)
-        setReload("Register")
-        Alert.alert('Error', 'Please fill in the missing fields.')
-        return
+        setMissing(temp);
+        setReload("Register");
+        Alert.alert('Error', 'Please fill in the missing fields.');
+        return;
       }
     }
 
@@ -68,16 +75,16 @@ const Register = ({ navigation }) => {
 
     if (password !== confirmPassword) {
       Alert.alert('Error', 'Passwords do not match.');
-      temp[2] = true
-      setMissing(temp)
-      setReload("Register")
+      temp[4] = true;
+      setMissing(temp);
+      setReload("Register");
       return;
     }
-    setMissing(temp)
-    setReload("Register")
-    
+    setMissing(temp);
+    setReload("Register");
+
     try {
-      const response = await axios.post(`${ngrokUrl}/register`, { email, password });
+      const response = await axios.post(`${ngrokUrl}/register`, { email, password, firstName, lastName });
       Alert.alert('Registration Successful', 'You have registered successfully. Please log in.');
       navigation.navigate('Login');
     } catch (error) {
@@ -93,6 +100,27 @@ const Register = ({ navigation }) => {
     <View style={styles.container}>
       <Image source={require('../assets/spartner_logo.png')} style={styles.logo} />
       <Text style={styles.title}>Create an Account</Text>
+      
+      <View style={{ flexDirection: 'row' }}>
+        <TextInput
+          style={styles.input}
+          placeholder="First Name"
+          value={firstName}
+          onChangeText={setFirstName}
+        />
+        <Text style={{ textAlign: 'left', fontSize: 15, marginTop: 2, marginLeft: -15, color: missing[0] ? 'red' : 'white' }}> * </Text>
+      </View>
+      
+      <View style={{ flexDirection: 'row' }}>
+        <TextInput
+          style={styles.input}
+          placeholder="Last Name"
+          value={lastName}
+          onChangeText={setLastName}
+        />
+        <Text style={{ textAlign: 'left', fontSize: 15, marginTop: 2, marginLeft: -15, color: missing[1] ? 'red' : 'white' }}> * </Text>
+      </View>
+      
       <View style={{ flexDirection: 'row' }}>
         <TextInput
           style={styles.input}
@@ -102,7 +130,7 @@ const Register = ({ navigation }) => {
           keyboardType="email-address"
           autoCapitalize="none"
         />
-        <Text style={{ textAlign: 'left', fontSize: 15, marginTop: 2, marginLeft: -15, color: missing[0] ? 'red' : 'white' }}> * </Text>
+        <Text style={{ textAlign: 'left', fontSize: 15, marginTop: 2, marginLeft: -15, color: missing[2] ? 'red' : 'white' }}> * </Text>
       </View>
 
       <View style={{ flexDirection: 'row' }}>
@@ -113,7 +141,7 @@ const Register = ({ navigation }) => {
           onChangeText={setPassword}
           secureTextEntry
         />
-        <Text style={{ textAlign: 'left', fontSize: 15, marginTop: 2, marginLeft: -15, color: missing[1] ? 'red' : 'white' }}> * </Text>
+        <Text style={{ textAlign: 'left', fontSize: 15, marginTop: 2, marginLeft: -15, color: missing[3] ? 'red' : 'white' }}> * </Text>
       </View>
 
       <View style={{ flexDirection: 'row' }}>
@@ -124,7 +152,7 @@ const Register = ({ navigation }) => {
           onChangeText={setConfirmPassword}
           secureTextEntry
         />
-        <Text style={{ textAlign: 'left', fontSize: 15, marginTop: 2, marginLeft: -15, color: missing[2] ? 'red' : 'white' }}> * </Text>
+        <Text style={{ textAlign: 'left', fontSize: 15, marginTop: 2, marginLeft: -15, color: missing[4] ? 'red' : 'white' }}> * </Text>
       </View>
 
       <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>

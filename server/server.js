@@ -47,10 +47,10 @@ app.get('/ngrok-url', async (req, res) => {
 
 // Define a user schema and model
 const UserSchema = new mongoose.Schema({
-  email: String,
-  password: String,
   firstName: String,
   lastName: String,
+  email: String,
+  password: String,
 });
 
 const User = mongoose.model('User', UserSchema);
