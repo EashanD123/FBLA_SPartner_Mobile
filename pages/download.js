@@ -143,6 +143,30 @@ const Download = ({ navigation }) => {
     }
     setDownloadList(tempDownloadList);
   };
+  
+  const applyFilters = () => {
+    let filtered = partners;
+
+    if (selectedFilters.soleProprietorship) {
+        filtered = filtered.filter(partner => partner.company.type_of_organization === 'Sole Proprietorship');
+    }
+    if (selectedFilters.partnership) {
+        filtered = filtered.filter(partner => partner.company.type_of_organization === 'Partnership');
+    }
+    if (selectedFilters.corporation) {
+        filtered = filtered.filter(partner => partner.company.type_of_organization === 'Corporation');
+    }
+    if (selectedFilters.nonProfit) {
+        filtered = filtered.filter(partner => partner.company.type_of_organization === 'Non-Profit Corporation');
+    }
+    if (selectedFilters.llc) {
+        filtered = filtered.filter(partner => partner.company.type_of_organization === 'LLC');
+    }
+
+    return filtered.filter(partner =>
+        partner.company.name.toLowerCase().includes(searchText.toLowerCase())
+    );
+};
 
   return (
     <View style={styles.container}>
