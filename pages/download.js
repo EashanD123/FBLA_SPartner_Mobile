@@ -143,7 +143,7 @@ const Download = ({ navigation }) => {
     }
     setDownloadList(tempDownloadList);
   };
-  
+
   const applyFilters = () => {
     let filtered = partners;
 
@@ -167,6 +167,9 @@ const Download = ({ navigation }) => {
         partner.company.name.toLowerCase().includes(searchText.toLowerCase())
     );
 };
+
+    const selectedPartnersList = applyFilters();
+
 
   return (
     <View style={styles.container}>
