@@ -84,9 +84,9 @@ const Login = ({ navigation }) => {
         <TouchableOpacity style={styles.registerButton} onPress={() => navigation.navigate('Register')}>
           <Text style={styles.registerButtonText}>Don't have an account?</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.registerButton} onPress={() => navigation.navigate('Register')}>
+        {/* <TouchableOpacity style={styles.registerButton} onPress={() => navigation.navigate('Register')}>
           <Text style={styles.registerButtonText}>Forgot Password? </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
