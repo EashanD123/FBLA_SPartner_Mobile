@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
-    marginTop: 100,
+    marginBottom: 20,
   },
   detailContainer: {
     width: '100%',
